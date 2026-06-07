@@ -7,7 +7,6 @@
           content="default-src 'none'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://open.er-api.com; img-src 'self' data:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'">
     <title>Calculator</title>
     <style>
-        /* Self-hosted fonts */
         @font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/inter-300.woff2) format('woff2')}
         @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-400.woff2) format('woff2')}
         @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-500.woff2) format('woff2')}
@@ -23,95 +22,83 @@
             --op: #ff9500; --op-hover: #e68600; --op-active: #cc7700;
             --eq: #0071e3; --eq-hover: #0060c0; --eq-active: #0050a0;
             --mono: 'JetBrains Mono', monospace; --sans: 'Inter', -apple-system, sans-serif;
-            --radius: 16px; --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.03);
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.03);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; }
+        body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; padding: 20px; }
 
-        .shell { width: 380px; padding: 20px; }
+        .shell { display: flex; gap: 20px; align-items: flex-start; max-width: 780px; width: 100%; }
 
-        /* ── Mode Tabs ── */
-        .tabs { display: flex; gap: 4px; margin-bottom: 16px; background: rgba(0,0,0,0.04); border-radius: 12px; padding: 4px; }
-        .tab { flex: 1; text-align: center; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.2s; border: none; background: none; }
-        .tab:hover { color: var(--ink); }
-        .tab.active { background: var(--card); color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,0.08); font-weight: 600; }
-
-        /* ── Calculator Card ── */
+        /* ── Calculator ── */
+        .calc-col { flex: 0 0 360px; }
         .calc-card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
 
-        /* ── Display ── */
-        .display { padding: 28px 24px 20px; text-align: right; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end; }
-        .display-expr { font-family: var(--mono); font-size: 14px; color: var(--muted); min-height: 20px; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .display-val { font-family: var(--mono); font-size: 48px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: font-size 0.15s; }
-        .display-val.small { font-size: 32px; }
-        .display-val.xsmall { font-size: 24px; }
+        .display { padding: 24px 20px 16px; text-align: right; min-height: 100px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .display-expr { font-family: var(--mono); font-size: 13px; color: var(--muted); min-height: 18px; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .display-val { font-family: var(--mono); font-size: 42px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: font-size 0.15s; }
+        .display-val.small { font-size: 28px; }
+        .display-val.xsmall { font-size: 20px; }
 
-        /* ── Buttons Grid ── */
         .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; padding: 1px; background: var(--border); }
-        .btn { font-family: var(--sans); font-size: 22px; font-weight: 400; padding: 20px; border: none; cursor: pointer; transition: all 0.1s; outline: none; position: relative; user-select: none; }
+        .btn { font-family: var(--sans); font-size: 20px; font-weight: 400; padding: 18px; border: none; cursor: pointer; transition: all 0.1s; outline: none; user-select: none; }
         .btn:active { transform: scale(0.96); }
         .btn.num { background: var(--btn); color: var(--ink); }
         .btn.num:hover { background: var(--btn-hover); }
         .btn.num:active { background: var(--btn-active); }
-        .btn.op { background: var(--op); color: #fff; font-size: 26px; font-weight: 500; }
+        .btn.op { background: var(--op); color: #fff; font-size: 22px; font-weight: 500; }
         .btn.op:hover { background: var(--op-hover); }
         .btn.op:active { background: var(--op-active); }
         .btn.op.active { background: var(--op-active); }
-        .btn.eq { background: var(--eq); color: #fff; font-size: 26px; font-weight: 500; }
+        .btn.eq { background: var(--eq); color: #fff; font-size: 22px; font-weight: 500; }
         .btn.eq:hover { background: var(--eq-hover); }
         .btn.eq:active { background: var(--eq-active); }
-        .btn.fn { background: #e8e8ed; color: var(--ink); font-size: 17px; font-weight: 500; }
+        .btn.fn { background: #e8e8ed; color: var(--ink); font-size: 15px; font-weight: 500; }
         .btn.fn:hover { background: #dddde2; }
         .btn.fn:active { background: #d0d0d5; }
-        .btn.zero { grid-column: span 2; text-align: left; padding-left: 32px; }
+        .btn.zero { grid-column: span 2; text-align: left; padding-left: 28px; }
 
-        /* ── Currency Panel ── */
-        .currency-panel { display: none; }
-        .currency-panel.active { display: block; }
-        .calc-panel.active { display: block; }
-        .calc-panel { display: none; }
+        /* ── Currency Column ── */
+        .fx-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 
-        .fx-card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); padding: 24px; }
-        .fx-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .fx-title { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-        .fx-rate { font-family: var(--mono); font-size: 12px; color: var(--accent); }
-        .fx-loading { color: var(--muted); font-size: 12px; }
+        .fx-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); padding: 18px 20px; }
+        .fx-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .fx-pair { font-size: 13px; font-weight: 600; color: var(--ink); }
+        .fx-badge { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 6px; background: #f0fdf4; color: #16a34a; }
 
-        .fx-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .fx-flag { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-        .fx-flag.usd { background: #eff6ff; } .fx-flag.cny { background: #fef2f2; }
+        .fx-row { display: flex; align-items: center; gap: 10px; }
+        .fx-flag { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
         .fx-input-wrap { flex: 1; }
-        .fx-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-        .fx-input { width: 100%; font-family: var(--mono); font-size: 28px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; }
+        .fx-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+        .fx-input { width: 100%; font-family: var(--mono); font-size: 22px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; }
         .fx-input::placeholder { color: #d1d1d6; }
 
-        .fx-swap { display: flex; justify-content: center; margin: -4px 0; }
-        .fx-swap-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--muted); transition: all 0.2s; }
+        .fx-swap { display: flex; justify-content: center; margin: -2px 0; }
+        .fx-swap-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--muted); transition: all 0.2s; }
         .fx-swap-btn:hover { border-color: var(--accent); color: var(--accent); transform: rotate(180deg); }
 
-        .fx-info { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .fx-update { font-size: 11px; color: var(--muted); }
-        .fx-powered { font-size: 10px; color: #c7c7cc; }
+        .fx-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 10px; color: #c7c7cc; display: flex; justify-content: space-between; }
+        .fx-update { color: var(--muted); }
 
         /* ── Responsive ── */
-        @media (max-width: 420px) {
-            .shell { width: 100%; padding: 12px; }
-            .btn { padding: 16px; font-size: 19px; }
-            .btn.op, .btn.eq { font-size: 22px; }
-            .display-val { font-size: 38px; }
-            .fx-input { font-size: 22px; }
+        @media (max-width: 780px) {
+            .shell { flex-direction: column; align-items: center; }
+            .calc-col { flex: none; width: 100%; max-width: 360px; }
+            .fx-col { width: 100%; max-width: 360px; }
+        }
+        @media (max-width: 400px) {
+            body { padding: 10px; }
+            .btn { padding: 15px; font-size: 18px; }
+            .btn.op, .btn.eq { font-size: 20px; }
+            .display-val { font-size: 36px; }
+            .fx-input { font-size: 20px; }
         }
     </style>
 </head>
 <body>
 <div class="shell">
-    <div class="tabs">
-        <button class="tab active" data-mode="calc">计算器</button>
-        <button class="tab" data-mode="fx">汇率换算</button>
-    </div>
 
     <!-- Calculator -->
-    <div class="calc-panel active">
+    <div class="calc-col">
         <div class="calc-card">
             <div class="display">
                 <div class="display-expr" id="expr"></div>
@@ -146,37 +133,78 @@
     </div>
 
     <!-- Currency Converter -->
-    <div class="currency-panel">
-        <div class="fx-card">
+    <div class="fx-col">
+        <!-- USD / CNY -->
+        <div class="fx-card" id="fx-usd-cny">
             <div class="fx-header">
-                <div class="fx-title">USD / CNY</div>
-                <div class="fx-rate" id="fx-rate">加载中...</div>
+                <span class="fx-pair">USD / CNY</span>
+                <span class="fx-badge" id="rate-usd-cny">--</span>
             </div>
-
             <div class="fx-row">
-                <div class="fx-flag usd">🇺🇸</div>
+                <span class="fx-flag">🇺🇸</span>
                 <div class="fx-input-wrap">
                     <div class="fx-label">美元 USD</div>
-                    <input type="text" class="fx-input" id="fx-usd" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                    <input type="text" class="fx-input fx-src" data-pair="usd-cny" data-from="USD" data-to="CNY" placeholder="0.00" inputmode="decimal" autocomplete="off">
                 </div>
             </div>
-
-            <div class="fx-swap">
-                <button class="fx-swap-btn" id="fx-swap" title="切换方向">⇅</button>
-            </div>
-
+            <div class="fx-swap"><button class="fx-swap-btn fx-swap-trigger" data-pair="usd-cny">⇅</button></div>
             <div class="fx-row">
-                <div class="fx-flag cny">🇨🇳</div>
+                <span class="fx-flag">🇨🇳</span>
                 <div class="fx-input-wrap">
                     <div class="fx-label">人民币 CNY</div>
-                    <input type="text" class="fx-input" id="fx-cny" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                    <input type="text" class="fx-input fx-dst" data-pair="usd-cny" placeholder="0.00" inputmode="decimal" autocomplete="off">
                 </div>
             </div>
+        </div>
 
-            <div class="fx-info">
-                <div class="fx-update" id="fx-update">汇率数据加载中...</div>
-                <div class="fx-powered">open.er-api.com</div>
+        <!-- USD / EUR -->
+        <div class="fx-card" id="fx-usd-eur">
+            <div class="fx-header">
+                <span class="fx-pair">USD / EUR</span>
+                <span class="fx-badge" id="rate-usd-eur">--</span>
             </div>
+            <div class="fx-row">
+                <span class="fx-flag">🇺🇸</span>
+                <div class="fx-input-wrap">
+                    <div class="fx-label">美元 USD</div>
+                    <input type="text" class="fx-input fx-src" data-pair="usd-eur" data-from="USD" data-to="EUR" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                </div>
+            </div>
+            <div class="fx-swap"><button class="fx-swap-btn fx-swap-trigger" data-pair="usd-eur">⇅</button></div>
+            <div class="fx-row">
+                <span class="fx-flag">🇪🇺</span>
+                <div class="fx-input-wrap">
+                    <div class="fx-label">欧元 EUR</div>
+                    <input type="text" class="fx-input fx-dst" data-pair="usd-eur" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <!-- USD / GBP -->
+        <div class="fx-card" id="fx-usd-gbp">
+            <div class="fx-header">
+                <span class="fx-pair">USD / GBP</span>
+                <span class="fx-badge" id="rate-usd-gbp">--</span>
+            </div>
+            <div class="fx-row">
+                <span class="fx-flag">🇺🇸</span>
+                <div class="fx-input-wrap">
+                    <div class="fx-label">美元 USD</div>
+                    <input type="text" class="fx-input fx-src" data-pair="usd-gbp" data-from="USD" data-to="GBP" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                </div>
+            </div>
+            <div class="fx-swap"><button class="fx-swap-btn fx-swap-trigger" data-pair="usd-gbp">⇅</button></div>
+            <div class="fx-row">
+                <span class="fx-flag">🇬🇧</span>
+                <div class="fx-input-wrap">
+                    <div class="fx-label">英镑 GBP</div>
+                    <input type="text" class="fx-input fx-dst" data-pair="usd-gbp" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;font-size:10px;color:#c7c7cc;padding:4px 0;">
+            <span id="fx-update">汇率加载中...</span> · open.er-api.com
         </div>
     </div>
 </div>
@@ -184,26 +212,6 @@
 <script>
 (function() {
     'use strict';
-
-    // ── Mode Tabs ──
-    var tabs = document.querySelectorAll('.tab');
-    var calcPanel = document.querySelector('.calc-panel');
-    var fxPanel = document.querySelector('.currency-panel');
-
-    tabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            tabs.forEach(function(t) { t.classList.remove('active'); });
-            tab.classList.add('active');
-            if (tab.dataset.mode === 'calc') {
-                calcPanel.classList.add('active');
-                fxPanel.classList.remove('active');
-            } else {
-                calcPanel.classList.remove('active');
-                fxPanel.classList.add('active');
-                if (!fxLoaded) fetchRate();
-            }
-        });
-    });
 
     // ── Calculator ──
     var display = document.getElementById('display');
@@ -214,197 +222,167 @@
         if (n === 'Error') return 'Error';
         var s = String(n);
         if (s.length > 12) {
-            var parsed = parseFloat(s);
-            if (Math.abs(parsed) >= 1e12 || (Math.abs(parsed) < 1e-6 && parsed !== 0)) {
-                return parsed.toExponential(6);
-            }
-            s = parsed.toPrecision(10).replace(/\.?0+$/, '');
+            var p = parseFloat(s);
+            if (Math.abs(p) >= 1e12 || (Math.abs(p) < 1e-6 && p !== 0)) return p.toExponential(6);
+            s = p.toPrecision(10).replace(/\.?0+$/, '');
         }
         return s;
     }
-
     function updateDisplay() {
         display.textContent = current;
         display.className = 'display-val' + (current.length > 11 ? ' xsmall' : current.length > 8 ? ' small' : '');
     }
-
     function inputNum(n) {
         if (justEq) { prev = null; op = null; justEq = false; }
         if (fresh) { current = n === '.' ? '0.' : n; fresh = false; }
-        else {
-            if (n === '.' && current.includes('.')) return;
-            if (current === '0' && n !== '.') current = n;
-            else current += n;
-        }
-        justEq = false;
-        updateDisplay();
+        else { if (n === '.' && current.includes('.')) return; current = (current === '0' && n !== '.') ? n : current + n; }
+        justEq = false; updateDisplay();
     }
-
     function calculate(a, b, operator) {
         a = parseFloat(a); b = parseFloat(b);
-        switch (operator) {
-            case '+': return a + b;
-            case '−': return a - b;
-            case '×': return a * b;
-            case '÷': return b === 0 ? 'Error' : a / b;
-        }
+        switch (operator) { case '+': return a+b; case '−': return a-b; case '×': return a*b; case '÷': return b===0?'Error':a/b; }
         return b;
     }
-
     function inputOp(o) {
-        if (op && !fresh) {
-            var result = calculate(prev, current, op);
-            current = fmt(result);
-            updateDisplay();
-        }
-        prev = current;
-        op = o;
-        fresh = true;
-        justEq = false;
+        if (op && !fresh) { current = fmt(calculate(prev, current, op)); updateDisplay(); }
+        prev = current; op = o; fresh = true; justEq = false;
         exprEl.textContent = prev + ' ' + op;
-        // Highlight active operator button
-        document.querySelectorAll('.btn.op').forEach(function(b) { b.classList.remove('active'); });
-        var activeBtn = document.querySelector('.btn.op[data-op="' + o + '"]');
-        if (activeBtn) activeBtn.classList.add('active');
+        document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
+        var ab = document.querySelector('.btn.op[data-op="'+o+'"]');
+        if (ab) ab.classList.add('active');
     }
-
     function doEq() {
         if (op && prev !== null) {
             exprEl.textContent = prev + ' ' + op + ' ' + current + ' =';
-            var result = calculate(prev, current, op);
-            current = fmt(result);
+            current = fmt(calculate(prev, current, op));
             prev = null; op = null; fresh = true; justEq = true;
             updateDisplay();
-            document.querySelectorAll('.btn.op').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
         }
     }
-
     function doClear() {
         current = '0'; prev = null; op = null; fresh = true; justEq = false;
-        exprEl.textContent = '';
-        updateDisplay();
-        document.querySelectorAll('.btn.op').forEach(function(b) { b.classList.remove('active'); });
+        exprEl.textContent = ''; updateDisplay();
+        document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
     }
+    function doSign() { if (current !== '0' && current !== 'Error') { current = current.startsWith('-')?current.slice(1):'-'+current; updateDisplay(); } }
+    function doPercent() { if (current !== 'Error') { current = fmt(parseFloat(current)/100); updateDisplay(); } }
 
-    function doSign() {
-        if (current !== '0' && current !== 'Error') {
-            current = current.startsWith('-') ? current.slice(1) : '-' + current;
-            updateDisplay();
-        }
-    }
-
-    function doPercent() {
-        if (current !== 'Error') {
-            current = fmt(parseFloat(current) / 100);
-            updateDisplay();
-        }
-    }
-
-    // Button clicks
     document.querySelector('.buttons').addEventListener('click', function(e) {
-        var btn = e.target.closest('.btn');
-        if (!btn) return;
-        var action = btn.dataset.action;
-        if (action === 'num') inputNum(btn.dataset.num);
-        else if (action === 'op') inputOp(btn.dataset.op);
-        else if (action === 'eq') doEq();
-        else if (action === 'clear') doClear();
-        else if (action === 'sign') doSign();
-        else if (action === 'percent') doPercent();
-        else if (action === 'decimal') inputNum('.');
+        var btn = e.target.closest('.btn'); if (!btn) return;
+        var a = btn.dataset.action;
+        if (a === 'num') inputNum(btn.dataset.num);
+        else if (a === 'op') inputOp(btn.dataset.op);
+        else if (a === 'eq') doEq();
+        else if (a === 'clear') doClear();
+        else if (a === 'sign') doSign();
+        else if (a === 'percent') doPercent();
+        else if (a === 'decimal') inputNum('.');
     });
 
-    // Keyboard support
     document.addEventListener('keydown', function(e) {
         if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-        var key = e.key;
-        if (key >= '0' && key <= '9') { inputNum(key); e.preventDefault(); }
-        else if (key === '.') { inputNum('.'); e.preventDefault(); }
-        else if (key === '+') { inputOp('+'); e.preventDefault(); }
-        else if (key === '-') { inputOp('−'); e.preventDefault(); }
-        else if (key === '*') { inputOp('×'); e.preventDefault(); }
-        else if (key === '/') { inputOp('÷'); e.preventDefault(); }
-        else if (key === 'Enter' || key === '=') { doEq(); e.preventDefault(); }
-        else if (key === 'Escape' || key === 'c' || key === 'C') { doClear(); e.preventDefault(); }
-        else if (key === 'Backspace') {
-            if (current.length > 1) current = current.slice(0, -1);
-            else current = '0';
-            updateDisplay(); e.preventDefault();
-        }
-        else if (key === '%') { doPercent(); e.preventDefault(); }
+        var k = e.key;
+        if (k >= '0' && k <= '9') { inputNum(k); e.preventDefault(); }
+        else if (k === '.') { inputNum('.'); e.preventDefault(); }
+        else if (k === '+') { inputOp('+'); e.preventDefault(); }
+        else if (k === '-') { inputOp('−'); e.preventDefault(); }
+        else if (k === '*') { inputOp('×'); e.preventDefault(); }
+        else if (k === '/') { inputOp('÷'); e.preventDefault(); }
+        else if (k === 'Enter' || k === '=') { doEq(); e.preventDefault(); }
+        else if (k === 'Escape' || k === 'c' || k === 'C') { doClear(); e.preventDefault(); }
+        else if (k === 'Backspace') { current = current.length > 1 ? current.slice(0,-1) : '0'; updateDisplay(); e.preventDefault(); }
+        else if (k === '%') { doPercent(); e.preventDefault(); }
     });
 
     // ── Currency Converter ──
-    var fxUsd = document.getElementById('fx-usd');
-    var fxCny = document.getElementById('fx-cny');
-    var fxRate = document.getElementById('fx-rate');
-    var fxUpdate = document.getElementById('fx-update');
-    var fxSwap = document.getElementById('fx-swap');
-    var fxLoaded = false, rate = null, direction = 'usd2cny';
+    var rates = {}, pairs = {
+        'usd-cny': { from: 'USD', to: 'CNY', dir: 1 },  // 1 = from→to, -1 = to→from
+        'usd-eur': { from: 'USD', to: 'EUR', dir: 1 },
+        'usd-gbp': { from: 'USD', to: 'GBP', dir: 1 }
+    };
 
-    function fetchRate() {
-        fxRate.textContent = '加载中...';
-        fxUpdate.textContent = '正在获取最新汇率...';
+    function fetchRates() {
+        document.getElementById('fx-update').textContent = '正在获取...';
         fetch('https://open.er-api.com/v6/latest/USD')
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.result === 'success') {
-                    rate = data.rates.CNY;
-                    fxLoaded = true;
-                    fxRate.textContent = '1 USD = ' + rate.toFixed(4) + ' CNY';
+                    rates = data.rates;
+                    ['usd-cny','usd-eur','usd-gbp'].forEach(function(pair) {
+                        var p = pairs[pair];
+                        var badge = document.getElementById('rate-' + pair);
+                        if (p.dir === 1) badge.textContent = '1 ' + p.from + ' = ' + rates[p.to].toFixed(4) + ' ' + p.to;
+                        else badge.textContent = '1 ' + p.to + ' = ' + (1/rates[p.to]).toFixed(4) + ' ' + p.from;
+                    });
                     var now = new Date();
-                    fxUpdate.textContent = '更新: ' + now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-                    convert();
+                    document.getElementById('fx-update').textContent = now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
                 } else {
-                    fxRate.textContent = '获取失败';
-                    fxUpdate.textContent = '请稍后重试';
+                    document.getElementById('fx-update').textContent = '获取失败';
                 }
             })
-            .catch(function() {
-                fxRate.textContent = '网络错误';
-                fxUpdate.textContent = '请检查网络连接';
-            });
+            .catch(function() { document.getElementById('fx-update').textContent = '网络错误'; });
     }
 
-    function convert() {
-        if (!rate) return;
-        if (direction === 'usd2cny') {
-            var usd = parseFloat(fxUsd.value.replace(/,/g, ''));
-            if (isNaN(usd)) { fxCny.value = ''; return; }
-            fxCny.value = (usd * rate).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        } else {
-            var cny = parseFloat(fxCny.value.replace(/,/g, ''));
-            if (isNaN(cny)) { fxUsd.value = ''; return; }
-            fxUsd.value = (cny / rate).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        }
+    function convert(pair) {
+        var p = pairs[pair];
+        var src = document.querySelector('.fx-src[data-pair="'+pair+'"]');
+        var dst = document.querySelector('.fx-dst[data-pair="'+pair+'"]');
+        var val = parseFloat(src.value.replace(/,/g, ''));
+        if (isNaN(val) || !rates[p.to]) { dst.value = ''; return; }
+        var result;
+        if (p.dir === 1) result = val * rates[p.to];
+        else result = val / rates[p.to];
+        dst.value = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
-    fxUsd.addEventListener('input', function() {
-        direction = 'usd2cny';
-        convert();
-    });
-    fxCny.addEventListener('input', function() {
-        direction = 'cny2usd';
-        convert();
+    // Source input → convert
+    document.querySelectorAll('.fx-src').forEach(function(el) {
+        el.addEventListener('input', function() { convert(el.dataset.pair); });
+        el.addEventListener('keydown', function(e) { if (e.key === 'Enter') { convert(el.dataset.pair); e.preventDefault(); } });
     });
 
-    fxSwap.addEventListener('click', function() {
-        direction = direction === 'usd2cny' ? 'cny2usd' : 'usd2cny';
-        if (direction === 'usd2cny') {
-            fxRate.textContent = '1 USD = ' + rate.toFixed(4) + ' CNY';
-        } else {
-            fxRate.textContent = '1 CNY = ' + (1/rate).toFixed(4) + ' USD';
-        }
-        convert();
-    });
+    // Swap direction
+    document.querySelectorAll('.fx-swap-trigger').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var pair = btn.dataset.pair;
+            var p = pairs[pair];
+            p.dir *= -1;
 
-    // Keyboard: Enter in fx inputs triggers convert
-    [fxUsd, fxCny].forEach(function(el) {
-        el.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') { convert(); e.preventDefault(); }
+            // Swap the from/to labels
+            var card = btn.closest('.fx-card');
+            var labels = card.querySelectorAll('.fx-label');
+            var flags = card.querySelectorAll('.fx-flag');
+            var srcInput = card.querySelector('.fx-src');
+            var dstInput = card.querySelector('.fx-dst');
+
+            if (p.dir === 1) {
+                labels[0].textContent = {USD:'美元 USD',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.from] + ' ' + p.from;
+                labels[1].textContent = {CNY:'人民币 CNY',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.to] + ' ' + p.to;
+                flags[0].textContent = {USD:'🇺🇸',EUR:'🇪🇺',GBP:'🇬🇧'}[p.from];
+                flags[1].textContent = {CNY:'🇨🇳',EUR:'🇪🇺',GBP:'🇬🇧'}[p.to];
+                srcInput.dataset.from = p.from; srcInput.dataset.to = p.to;
+            } else {
+                labels[0].textContent = {CNY:'人民币 CNY',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.to] + ' ' + p.to;
+                labels[1].textContent = {USD:'美元 USD',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.from] + ' ' + p.from;
+                flags[0].textContent = {CNY:'🇨🇳',EUR:'🇪🇺',GBP:'🇬🇧'}[p.to];
+                flags[1].textContent = {USD:'🇺🇸',EUR:'🇪🇺',GBP:'🇬🇧'}[p.from];
+                srcInput.dataset.from = p.to; srcInput.dataset.to = p.from;
+            }
+
+            // Update badge
+            var badge = document.getElementById('rate-' + pair);
+            if (rates[p.to]) {
+                if (p.dir === 1) badge.textContent = '1 ' + p.from + ' = ' + rates[p.to].toFixed(4) + ' ' + p.to;
+                else badge.textContent = '1 ' + p.to + ' = ' + (1/rates[p.to]).toFixed(4) + ' ' + p.from;
+            }
+
+            // Clear and re-convert
+            srcInput.value = ''; dstInput.value = '';
         });
     });
 
+    fetchRates();
 })();
 </script>
 </body>
