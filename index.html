@@ -16,65 +16,60 @@
         @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/jbm-500.woff2) format('woff2')}
 
         :root {
-            --bg: #1a1a2e; --card: #16213e; --card2: #0f3460;
-            --ink: #e8e8e8; --muted: #7f8c9b; --dim: #4a5568;
-            --accent: #4fc3f7; --accent2: #81c784;
-            --border: rgba(255,255,255,0.06);
-            --btn: #1e2a4a; --btn-hover: #253356; --btn-active: #2d3f6a;
-            --op: #e67e22; --op-hover: #d35400; --op-active: #bf6516;
-            --eq: #4fc3f7; --eq-hover: #29b6f6; --eq-active: #0288d1;
-            --fn: #2d3f6a; --fn-hover: #34495e; --fn-active: #3d566e;
+            --bg: #f0f2f5; --card: #fff; --ink: #1d1d1f; --muted: #86868b; --dim: #c7c7cc;
+            --accent: #0071e3; --green: #16a34a;
+            --border: rgba(0,0,0,0.05);
+            --btn: #f8f8fa; --btn-hover: #ebebed; --btn-active: #dddde0;
+            --op: #ff9500; --op-hover: #e68a00; --op-active: #cc7a00;
+            --eq: #0071e3; --eq-hover: #0062c4; --eq-active: #0052a5;
+            --fn: #e8e8ed; --fn-hover: #dddde2; --fn-active: #d0d0d5;
             --mono: 'JetBrains Mono', monospace; --sans: 'Inter', -apple-system, sans-serif;
-            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
             --radius: 18px; --pad: 22px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; padding: 20px; }
 
-        .shell { display: flex; gap: 20px; align-items: stretch; width: 100%; max-width: 900px; }
+        .shell { display: flex; gap: 18px; align-items: stretch; width: 100%; max-width: 900px; }
         .col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .section-title { font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding-left: 2px; }
         .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; flex: 1; display: flex; flex-direction: column; }
 
-        /* ── Section Title ── */
-        .section-title { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; padding-left: 2px; }
-
         /* ── Calculator ── */
-        .display { padding: 28px var(--pad) 18px; text-align: right; flex-shrink: 0; background: linear-gradient(180deg, rgba(79,195,247,0.04) 0%, transparent 100%); }
-        .display-expr { font-family: var(--mono); font-size: 14px; color: var(--muted); min-height: 20px; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .display { padding: 26px var(--pad) 16px; text-align: right; flex-shrink: 0; }
+        .display-expr { font-family: var(--mono); font-size: 14px; color: var(--muted); min-height: 20px; margin-bottom: 6px; }
         .display-val { font-family: var(--mono); font-size: 50px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .display-val.small { font-size: 34px; }
         .display-val.xsmall { font-size: 24px; }
 
-        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; padding: 1px; background: var(--border); flex: 1; }
-        .btn { font-family: var(--sans); font-size: 26px; font-weight: 400; border: none; cursor: pointer; transition: all 0.12s; outline: none; user-select: none; display: flex; align-items: center; justify-content: center; background: var(--btn); color: var(--ink); }
+        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; background: var(--border); flex: 1; }
+        .btn { font-family: var(--sans); font-size: 26px; font-weight: 400; border: none; cursor: pointer; transition: all 0.1s; outline: none; user-select: none; display: flex; align-items: center; justify-content: center; background: var(--btn); color: var(--ink); }
         .btn:hover { background: var(--btn-hover); }
         .btn:active { background: var(--btn-active); transform: scale(0.97); }
         .btn.op { background: var(--op); color: #fff; font-size: 30px; font-weight: 500; }
         .btn.op:hover { background: var(--op-hover); }
         .btn.op:active { background: var(--op-active); }
         .btn.op.active { background: var(--op-active); }
-        .btn.eq { background: var(--eq); color: #1a1a2e; font-size: 30px; font-weight: 600; }
+        .btn.eq { background: var(--eq); color: #fff; font-size: 30px; font-weight: 600; }
         .btn.eq:hover { background: var(--eq-hover); }
         .btn.eq:active { background: var(--eq-active); }
-        .btn.fn { background: var(--fn); color: var(--muted); font-size: 18px; font-weight: 500; }
+        .btn.fn { background: var(--fn); color: var(--ink); font-size: 18px; font-weight: 500; }
         .btn.fn:hover { background: var(--fn-hover); }
         .btn.fn:active { background: var(--fn-active); }
 
         /* ── Currency ── */
-        .fx-header { padding: 18px var(--pad) 0; flex-shrink: 0; }
-        .fx-rows { padding: 14px var(--pad); flex: 1; display: flex; flex-direction: column; gap: 8px; }
-
-        .fx-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid transparent; transition: all 0.2s; flex: 1; }
-        .fx-row:focus-within { border-color: var(--accent); background: rgba(79,195,247,0.06); }
+        .fx-rows { padding: 16px var(--pad); flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .fx-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; background: #f8f9fa; border: 1px solid transparent; transition: all 0.2s; flex: 1; }
+        .fx-row:focus-within { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.07); }
         .fx-code { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--accent); width: 42px; flex-shrink: 0; text-align: center; }
-        .fx-divider { width: 1px; height: 30px; background: var(--border); flex-shrink: 0; }
+        .fx-div { width: 1px; height: 30px; background: var(--border); flex-shrink: 0; }
         .fx-input { flex: 1; font-family: var(--mono); font-size: 28px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; min-width: 0; }
         .fx-input::placeholder { color: var(--dim); }
         .fx-input.active-source { color: var(--accent); }
 
-        .fx-rates { padding: 0 var(--pad); display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
-        .fx-rate-tag { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 6px; background: rgba(129,199,132,0.12); color: var(--accent2); }
-        .fx-footer { padding: 12px var(--pad) 16px; font-size: 10px; color: var(--dim); display: flex; justify-content: space-between; flex-shrink: 0; }
+        .fx-bar { padding: 0 var(--pad) 2px; display: flex; flex-wrap: wrap; gap: 6px; flex-shrink: 0; }
+        .fx-tag { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 6px; background: #f0fdf4; color: var(--green); white-space: nowrap; }
+        .fx-footer { padding: 10px var(--pad) 14px; font-size: 10px; color: var(--dim); display: flex; justify-content: space-between; flex-shrink: 0; }
 
         @media (max-width: 800px) {
             .shell { flex-direction: column; max-width: 420px; }
@@ -90,8 +85,6 @@
 </head>
 <body>
 <div class="shell">
-
-    <!-- Calculator -->
     <div class="col">
         <div class="section-title">Calculator</div>
         <div class="card">
@@ -104,56 +97,50 @@
                 <button class="btn fn" data-action="sign">+/−</button>
                 <button class="btn fn" data-action="percent">%</button>
                 <button class="btn op" data-action="op" data-op="÷">÷</button>
-
                 <button class="btn num" data-action="num" data-num="7">7</button>
                 <button class="btn num" data-action="num" data-num="8">8</button>
                 <button class="btn num" data-action="num" data-num="9">9</button>
                 <button class="btn op" data-action="op" data-op="×">×</button>
-
                 <button class="btn num" data-action="num" data-num="4">4</button>
                 <button class="btn num" data-action="num" data-num="5">5</button>
                 <button class="btn num" data-action="num" data-num="6">6</button>
                 <button class="btn op" data-action="op" data-op="−">−</button>
-
                 <button class="btn num" data-action="num" data-num="1">1</button>
                 <button class="btn num" data-action="num" data-num="2">2</button>
                 <button class="btn num" data-action="num" data-num="3">3</button>
                 <button class="btn op" data-action="op" data-op="+">+</button>
-
                 <button class="btn num" data-action="num" data-num="0" style="grid-column:span 2">0</button>
                 <button class="btn num" data-action="decimal">.</button>
                 <button class="btn eq" data-action="eq">=</button>
             </div>
         </div>
     </div>
-
-    <!-- Currency Converter -->
     <div class="col">
         <div class="section-title">Exchange Rate</div>
         <div class="card">
             <div class="fx-rows">
                 <div class="fx-row">
                     <span class="fx-code">CNY</span>
-                    <span class="fx-divider"></span>
+                    <span class="fx-div"></span>
                     <input type="text" class="fx-input" id="fx-cny" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="CNY">
                 </div>
                 <div class="fx-row">
                     <span class="fx-code">USD</span>
-                    <span class="fx-divider"></span>
+                    <span class="fx-div"></span>
                     <input type="text" class="fx-input" id="fx-usd" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="USD">
                 </div>
                 <div class="fx-row">
                     <span class="fx-code">EUR</span>
-                    <span class="fx-divider"></span>
+                    <span class="fx-div"></span>
                     <input type="text" class="fx-input" id="fx-eur" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="EUR">
                 </div>
                 <div class="fx-row">
                     <span class="fx-code">GBP</span>
-                    <span class="fx-divider"></span>
+                    <span class="fx-div"></span>
                     <input type="text" class="fx-input" id="fx-gbp" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="GBP">
                 </div>
             </div>
-            <div class="fx-rates" id="fx-rates"></div>
+            <div class="fx-bar" id="fx-rates"></div>
             <div class="fx-footer">
                 <span id="fx-update">Loading...</span>
                 <span>open.er-api.com</span>
@@ -165,101 +152,40 @@
 <script>
 (function() {
     'use strict';
-
-    // ── Calculator ──
-    var display = document.getElementById('display');
-    var exprEl = document.getElementById('expr');
+    var display = document.getElementById('display'), exprEl = document.getElementById('expr');
     var current = '0', prev = null, op = null, fresh = true, justEq = false;
-
-    function fmt(n) {
-        if (n === 'Error') return 'Error';
-        var s = String(n);
-        if (s.length > 12) { var p = parseFloat(s); if (Math.abs(p) >= 1e12 || (Math.abs(p) < 1e-6 && p !== 0)) return p.toExponential(6); s = p.toPrecision(10).replace(/\.?0+$/, ''); }
-        return s;
-    }
+    function fmt(n) { if (n === 'Error') return 'Error'; var s = String(n); if (s.length > 12) { var p = parseFloat(s); if (Math.abs(p) >= 1e12 || (Math.abs(p) < 1e-6 && p !== 0)) return p.toExponential(6); s = p.toPrecision(10).replace(/\.?0+$/, ''); } return s; }
     function updateDisplay() { display.textContent = current; display.className = 'display-val' + (current.length > 11 ? ' xsmall' : current.length > 8 ? ' small' : ''); }
-    function inputNum(n) {
-        if (justEq) { prev = null; op = null; justEq = false; }
-        if (fresh) { current = n === '.' ? '0.' : n; fresh = false; }
-        else { if (n === '.' && current.includes('.')) return; current = (current === '0' && n !== '.') ? n : current + n; }
-        justEq = false; updateDisplay();
-    }
-    function calculate(a, b, operator) { a = parseFloat(a); b = parseFloat(b); switch (operator) { case '+': return a+b; case '−': return a-b; case '×': return a*b; case '÷': return b===0?'Error':a/b; } return b; }
-    function inputOp(o) {
-        if (op && !fresh) { current = fmt(calculate(prev, current, op)); updateDisplay(); }
-        prev = current; op = o; fresh = true; justEq = false;
-        exprEl.textContent = prev + ' ' + op;
-        document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
-        var ab = document.querySelector('.btn.op[data-op="'+o+'"]'); if (ab) ab.classList.add('active');
-    }
-    function doEq() {
-        if (op && prev !== null) {
-            exprEl.textContent = prev + ' ' + op + ' ' + current + ' =';
-            current = fmt(calculate(prev, current, op)); prev = null; op = null; fresh = true; justEq = true;
-            updateDisplay(); document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
-        }
-    }
+    function inputNum(n) { if (justEq) { prev = null; op = null; justEq = false; } if (fresh) { current = n === '.' ? '0.' : n; fresh = false; } else { if (n === '.' && current.includes('.')) return; current = (current === '0' && n !== '.') ? n : current + n; } justEq = false; updateDisplay(); }
+    function calc(a, b, o) { a = parseFloat(a); b = parseFloat(b); switch (o) { case '+': return a+b; case '−': return a-b; case '×': return a*b; case '÷': return b===0?'Error':a/b; } return b; }
+    function inputOp(o) { if (op && !fresh) { current = fmt(calc(prev, current, op)); updateDisplay(); } prev = current; op = o; fresh = true; justEq = false; exprEl.textContent = prev + ' ' + op; document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')}); var ab = document.querySelector('.btn.op[data-op="'+o+'"]'); if (ab) ab.classList.add('active'); }
+    function doEq() { if (op && prev !== null) { exprEl.textContent = prev + ' ' + op + ' ' + current + ' ='; current = fmt(calc(prev, current, op)); prev = null; op = null; fresh = true; justEq = true; updateDisplay(); document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')}); } }
     function doClear() { current = '0'; prev = null; op = null; fresh = true; justEq = false; exprEl.textContent = ''; updateDisplay(); document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')}); }
     function doSign() { if (current !== '0' && current !== 'Error') { current = current.startsWith('-')?current.slice(1):'-'+current; updateDisplay(); } }
     function doPercent() { if (current !== 'Error') { current = fmt(parseFloat(current)/100); updateDisplay(); } }
 
-    document.querySelector('.buttons').addEventListener('click', function(e) {
-        var btn = e.target.closest('.btn'); if (!btn) return;
-        var a = btn.dataset.action;
-        if (a === 'num') inputNum(btn.dataset.num); else if (a === 'op') inputOp(btn.dataset.op);
-        else if (a === 'eq') doEq(); else if (a === 'clear') doClear();
-        else if (a === 'sign') doSign(); else if (a === 'percent') doPercent();
-        else if (a === 'decimal') inputNum('.');
-    });
-    document.addEventListener('keydown', function(e) {
-        if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-        var k = e.key;
-        if (k >= '0' && k <= '9') { inputNum(k); e.preventDefault(); } else if (k === '.') { inputNum('.'); e.preventDefault(); }
-        else if (k === '+') { inputOp('+'); e.preventDefault(); } else if (k === '-') { inputOp('−'); e.preventDefault(); }
-        else if (k === '*') { inputOp('×'); e.preventDefault(); } else if (k === '/') { inputOp('÷'); e.preventDefault(); }
-        else if (k === 'Enter' || k === '=') { doEq(); e.preventDefault(); } else if (k === 'Escape' || k === 'c' || k === 'C') { doClear(); e.preventDefault(); }
-        else if (k === 'Backspace') { current = current.length > 1 ? current.slice(0,-1) : '0'; updateDisplay(); e.preventDefault(); }
-        else if (k === '%') { doPercent(); e.preventDefault(); }
-    });
+    document.querySelector('.buttons').addEventListener('click', function(e) { var btn = e.target.closest('.btn'); if (!btn) return; var a = btn.dataset.action; if (a === 'num') inputNum(btn.dataset.num); else if (a === 'op') inputOp(btn.dataset.op); else if (a === 'eq') doEq(); else if (a === 'clear') doClear(); else if (a === 'sign') doSign(); else if (a === 'percent') doPercent(); else if (a === 'decimal') inputNum('.'); });
+    document.addEventListener('keydown', function(e) { if (document.activeElement && document.activeElement.tagName === 'INPUT') return; var k = e.key; if (k >= '0' && k <= '9') { inputNum(k); e.preventDefault(); } else if (k === '.') { inputNum('.'); e.preventDefault(); } else if (k === '+') { inputOp('+'); e.preventDefault(); } else if (k === '-') { inputOp('−'); e.preventDefault(); } else if (k === '*') { inputOp('×'); e.preventDefault(); } else if (k === '/') { inputOp('÷'); e.preventDefault(); } else if (k === 'Enter' || k === '=') { doEq(); e.preventDefault(); } else if (k === 'Escape' || k === 'c' || k === 'C') { doClear(); e.preventDefault(); } else if (k === 'Backspace') { current = current.length > 1 ? current.slice(0,-1) : '0'; updateDisplay(); e.preventDefault(); } else if (k === '%') { doPercent(); e.preventDefault(); } });
 
     // ── Currency ──
-    var rates = {};
-    var inputs = { CNY: document.getElementById('fx-cny'), USD: document.getElementById('fx-usd'), EUR: document.getElementById('fx-eur'), GBP: document.getElementById('fx-gbp') };
-    var activeSource = null;
-
+    var rates = {}, inputs = { CNY: document.getElementById('fx-cny'), USD: document.getElementById('fx-usd'), EUR: document.getElementById('fx-eur'), GBP: document.getElementById('fx-gbp') }, activeSource = null;
     function fetchRates() {
         document.getElementById('fx-update').textContent = 'Loading...';
-        fetch('https://open.er-api.com/v6/latest/USD')
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.result === 'success') {
-                    rates = data.rates;
-                    var tags = document.getElementById('fx-rates'); tags.innerHTML = '';
-                    [{from:'CNY',to:'USD',r:1/rates.CNY},{from:'CNY',to:'EUR',r:rates.EUR/rates.CNY},{from:'CNY',to:'GBP',r:rates.GBP/rates.CNY}].forEach(function(p) {
-                        var t = document.createElement('span'); t.className = 'fx-rate-tag'; t.textContent = '1 ' + p.from + ' = ' + p.r.toFixed(4) + ' ' + p.to; tags.appendChild(t);
-                    });
-                    var now = new Date();
-                    document.getElementById('fx-update').textContent = now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-                    if (activeSource) convertFrom(activeSource);
-                } else { document.getElementById('fx-update').textContent = 'Failed'; }
-            })
-            .catch(function() { document.getElementById('fx-update').textContent = 'Network Error'; });
+        fetch('https://open.er-api.com/v6/latest/USD').then(function(r) { return r.json(); }).then(function(data) {
+            if (data.result === 'success') {
+                rates = data.rates;
+                var bar = document.getElementById('fx-rates'); bar.innerHTML = '';
+                [{from:'CNY',to:'USD',r:1/rates.CNY},{from:'CNY',to:'EUR',r:rates.EUR/rates.CNY},{from:'CNY',to:'GBP',r:rates.GBP/rates.CNY}].forEach(function(p) {
+                    var t = document.createElement('span'); t.className = 'fx-tag'; t.textContent = '1 ' + p.from + ' = ' + p.r.toFixed(4) + ' ' + p.to; bar.appendChild(t);
+                });
+                var now = new Date();
+                document.getElementById('fx-update').textContent = now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+                if (activeSource) convertFrom(activeSource);
+            } else { document.getElementById('fx-update').textContent = 'Failed'; }
+        }).catch(function() { document.getElementById('fx-update').textContent = 'Network Error'; });
     }
-
-    function convertFrom(src) {
-        var val = parseFloat(inputs[src].value.replace(/,/g, ''));
-        if (isNaN(val)) { Object.keys(inputs).forEach(function(c) { if (c !== src) inputs[c].value = ''; }); return; }
-        var usdVal = val / rates[src];
-        Object.keys(inputs).forEach(function(c) { if (c !== src) inputs[c].value = (usdVal * rates[c]).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); });
-    }
-
-    Object.keys(inputs).forEach(function(currency) {
-        var el = inputs[currency];
-        el.addEventListener('input', function() { activeSource = currency; Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); }); el.classList.add('active-source'); convertFrom(currency); });
-        el.addEventListener('focus', function() { activeSource = currency; Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); }); el.classList.add('active-source'); });
-        el.addEventListener('keydown', function(e) { if (e.key === 'Enter') { convertFrom(currency); e.preventDefault(); } });
-    });
-
+    function convertFrom(src) { var val = parseFloat(inputs[src].value.replace(/,/g, '')); if (isNaN(val)) { Object.keys(inputs).forEach(function(c) { if (c !== src) inputs[c].value = ''; }); return; } var usdVal = val / rates[src]; Object.keys(inputs).forEach(function(c) { if (c !== src) inputs[c].value = (usdVal * rates[c]).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }); }
+    Object.keys(inputs).forEach(function(currency) { var el = inputs[currency]; el.addEventListener('input', function() { activeSource = currency; Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); }); el.classList.add('active-source'); convertFrom(currency); }); el.addEventListener('focus', function() { activeSource = currency; Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); }); el.classList.add('active-source'); }); el.addEventListener('keydown', function(e) { if (e.key === 'Enter') { convertFrom(currency); e.preventDefault(); } }); });
     fetchRates();
 })();
 </script>
