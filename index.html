@@ -17,74 +17,74 @@
 
         :root {
             --bg: #f5f5f7; --card: #fff; --ink: #1d1d1f; --muted: #86868b;
-            --border: rgba(0,0,0,0.06); --accent: #0071e3; --accent2: #34c759;
+            --border: rgba(0,0,0,0.06); --accent: #0071e3;
             --btn: #f8f8fa; --btn-hover: #e8e8ed; --btn-active: #d4d4d8;
             --op: #ff9500; --op-hover: #e68600; --op-active: #cc7700;
             --eq: #0071e3; --eq-hover: #0060c0; --eq-active: #0050a0;
             --mono: 'JetBrains Mono', monospace; --sans: 'Inter', -apple-system, sans-serif;
             --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.03);
+            --radius: 20px; --pad: 24px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; padding: 20px; }
 
-        .shell { display: flex; gap: 20px; align-items: flex-start; max-width: 780px; width: 100%; }
+        .shell { display: flex; gap: 20px; align-items: stretch; max-width: 780px; width: 100%; }
+
+        .col { flex: 1; min-width: 0; }
+        .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; height: 100%; display: flex; flex-direction: column; }
 
         /* ── Calculator ── */
-        .calc-col { flex: 0 0 360px; }
-        .calc-card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+        .display { padding: 28px var(--pad) 18px; text-align: right; }
+        .display-expr { font-family: var(--mono); font-size: 13px; color: var(--muted); min-height: 18px; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .display-val { font-family: var(--mono); font-size: 44px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: font-size 0.15s; }
+        .display-val.small { font-size: 30px; }
+        .display-val.xsmall { font-size: 22px; }
 
-        .display { padding: 24px 20px 16px; text-align: right; min-height: 100px; display: flex; flex-direction: column; justify-content: flex-end; }
-        .display-expr { font-family: var(--mono); font-size: 13px; color: var(--muted); min-height: 18px; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .display-val { font-family: var(--mono); font-size: 42px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: font-size 0.15s; }
-        .display-val.small { font-size: 28px; }
-        .display-val.xsmall { font-size: 20px; }
-
-        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; padding: 1px; background: var(--border); }
-        .btn { font-family: var(--sans); font-size: 20px; font-weight: 400; padding: 18px; border: none; cursor: pointer; transition: all 0.1s; outline: none; user-select: none; }
+        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; padding: 1px; background: var(--border); flex: 1; }
+        .btn { font-family: var(--sans); font-size: 22px; font-weight: 400; border: none; cursor: pointer; transition: all 0.1s; outline: none; user-select: none; display: flex; align-items: center; justify-content: center; padding: 0; }
         .btn:active { transform: scale(0.96); }
         .btn.num { background: var(--btn); color: var(--ink); }
         .btn.num:hover { background: var(--btn-hover); }
         .btn.num:active { background: var(--btn-active); }
-        .btn.op { background: var(--op); color: #fff; font-size: 22px; font-weight: 500; }
+        .btn.op { background: var(--op); color: #fff; font-size: 26px; font-weight: 500; }
         .btn.op:hover { background: var(--op-hover); }
         .btn.op:active { background: var(--op-active); }
         .btn.op.active { background: var(--op-active); }
-        .btn.eq { background: var(--eq); color: #fff; font-size: 22px; font-weight: 500; }
+        .btn.eq { background: var(--eq); color: #fff; font-size: 26px; font-weight: 500; }
         .btn.eq:hover { background: var(--eq-hover); }
         .btn.eq:active { background: var(--eq-active); }
-        .btn.fn { background: #e8e8ed; color: var(--ink); font-size: 15px; font-weight: 500; }
+        .btn.fn { background: #e8e8ed; color: var(--ink); font-size: 17px; font-weight: 500; }
         .btn.fn:hover { background: #dddde2; }
         .btn.fn:active { background: #d0d0d5; }
-        .btn.zero { grid-column: span 2; text-align: left; padding-left: 28px; }
 
-        /* ── Currency Column ── */
-        .fx-col { flex: 1; min-width: 0; }
-        .fx-card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); padding: 24px; }
-        .fx-title { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+        /* ── Currency ── */
+        .fx-title { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 20px var(--pad) 0; }
+        .fx-rows { padding: 16px var(--pad); flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
-        .fx-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 10px 12px; border-radius: 12px; background: #fafafa; border: 1px solid transparent; transition: all 0.2s; }
+        .fx-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: #fafafa; border: 1px solid transparent; transition: all 0.2s; flex: 1; }
         .fx-row:focus-within { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.08); }
-        .fx-code { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent); width: 36px; flex-shrink: 0; text-align: center; }
-        .fx-divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
-        .fx-input { flex: 1; font-family: var(--mono); font-size: 22px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; min-width: 0; }
+        .fx-code { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--accent); width: 38px; flex-shrink: 0; text-align: center; }
+        .fx-divider { width: 1px; height: 30px; background: var(--border); flex-shrink: 0; }
+        .fx-input { flex: 1; font-family: var(--mono); font-size: 24px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; min-width: 0; }
         .fx-input::placeholder { color: #d1d1d6; }
         .fx-input.active-source { color: var(--accent); }
 
-        .fx-rates { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 8px; }
+        .fx-rates { padding: 0 var(--pad); display: flex; flex-wrap: wrap; gap: 8px; }
         .fx-rate-tag { font-family: var(--mono); font-size: 10px; padding: 4px 8px; border-radius: 6px; background: #f0fdf4; color: #16a34a; }
-        .fx-footer { margin-top: 12px; font-size: 10px; color: #c7c7cc; display: flex; justify-content: space-between; }
+        .fx-footer { padding: 12px var(--pad) 16px; font-size: 10px; color: #c7c7cc; display: flex; justify-content: space-between; }
 
         @media (max-width: 780px) {
-            .shell { flex-direction: column; align-items: center; }
-            .calc-col { flex: none; width: 100%; max-width: 360px; }
-            .fx-col { width: 100%; max-width: 360px; }
+            .shell { flex-direction: column; align-items: center; max-width: 380px; }
+            .col { width: 100%; }
+            .card { height: auto; }
+            .buttons { min-height: 260px; }
         }
         @media (max-width: 400px) {
             body { padding: 10px; }
-            .btn { padding: 15px; font-size: 18px; }
-            .btn.op, .btn.eq { font-size: 20px; }
+            .btn { font-size: 19px; }
+            .btn.op, .btn.eq { font-size: 23px; }
             .display-val { font-size: 36px; }
-            .fx-input { font-size: 20px; }
+            .fx-input { font-size: 21px; }
         }
     </style>
 </head>
@@ -92,8 +92,8 @@
 <div class="shell">
 
     <!-- Calculator -->
-    <div class="calc-col">
-        <div class="calc-card">
+    <div class="col">
+        <div class="card">
             <div class="display">
                 <div class="display-expr" id="expr"></div>
                 <div class="display-val" id="display">0</div>
@@ -119,7 +119,7 @@
                 <button class="btn num" data-action="num" data-num="3">3</button>
                 <button class="btn op" data-action="op" data-op="+">+</button>
 
-                <button class="btn num zero" data-action="num" data-num="0">0</button>
+                <button class="btn num" data-action="num" data-num="0" style="grid-column:span 2">0</button>
                 <button class="btn num" data-action="decimal">.</button>
                 <button class="btn eq" data-action="eq">=</button>
             </div>
@@ -127,31 +127,31 @@
     </div>
 
     <!-- Currency Converter -->
-    <div class="fx-col">
-        <div class="fx-card">
+    <div class="col">
+        <div class="card">
             <div class="fx-title">实时汇率换算</div>
-
-            <div class="fx-row">
-                <span class="fx-code">CNY</span>
-                <span class="fx-divider"></span>
-                <input type="text" class="fx-input" id="fx-cny" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="CNY">
+            <div class="fx-rows">
+                <div class="fx-row">
+                    <span class="fx-code">CNY</span>
+                    <span class="fx-divider"></span>
+                    <input type="text" class="fx-input" id="fx-cny" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="CNY">
+                </div>
+                <div class="fx-row">
+                    <span class="fx-code">USD</span>
+                    <span class="fx-divider"></span>
+                    <input type="text" class="fx-input" id="fx-usd" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="USD">
+                </div>
+                <div class="fx-row">
+                    <span class="fx-code">EUR</span>
+                    <span class="fx-divider"></span>
+                    <input type="text" class="fx-input" id="fx-eur" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="EUR">
+                </div>
+                <div class="fx-row">
+                    <span class="fx-code">GBP</span>
+                    <span class="fx-divider"></span>
+                    <input type="text" class="fx-input" id="fx-gbp" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="GBP">
+                </div>
             </div>
-            <div class="fx-row">
-                <span class="fx-code">USD</span>
-                <span class="fx-divider"></span>
-                <input type="text" class="fx-input" id="fx-usd" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="USD">
-            </div>
-            <div class="fx-row">
-                <span class="fx-code">EUR</span>
-                <span class="fx-divider"></span>
-                <input type="text" class="fx-input" id="fx-eur" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="EUR">
-            </div>
-            <div class="fx-row">
-                <span class="fx-code">GBP</span>
-                <span class="fx-divider"></span>
-                <input type="text" class="fx-input" id="fx-gbp" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="GBP">
-            </div>
-
             <div class="fx-rates" id="fx-rates"></div>
             <div class="fx-footer">
                 <span id="fx-update">加载中...</span>
@@ -173,88 +173,57 @@
     function fmt(n) {
         if (n === 'Error') return 'Error';
         var s = String(n);
-        if (s.length > 12) {
-            var p = parseFloat(s);
-            if (Math.abs(p) >= 1e12 || (Math.abs(p) < 1e-6 && p !== 0)) return p.toExponential(6);
-            s = p.toPrecision(10).replace(/\.?0+$/, '');
-        }
+        if (s.length > 12) { var p = parseFloat(s); if (Math.abs(p) >= 1e12 || (Math.abs(p) < 1e-6 && p !== 0)) return p.toExponential(6); s = p.toPrecision(10).replace(/\.?0+$/, ''); }
         return s;
     }
-    function updateDisplay() {
-        display.textContent = current;
-        display.className = 'display-val' + (current.length > 11 ? ' xsmall' : current.length > 8 ? ' small' : '');
-    }
+    function updateDisplay() { display.textContent = current; display.className = 'display-val' + (current.length > 11 ? ' xsmall' : current.length > 8 ? ' small' : ''); }
     function inputNum(n) {
         if (justEq) { prev = null; op = null; justEq = false; }
         if (fresh) { current = n === '.' ? '0.' : n; fresh = false; }
         else { if (n === '.' && current.includes('.')) return; current = (current === '0' && n !== '.') ? n : current + n; }
         justEq = false; updateDisplay();
     }
-    function calculate(a, b, operator) {
-        a = parseFloat(a); b = parseFloat(b);
-        switch (operator) { case '+': return a+b; case '−': return a-b; case '×': return a*b; case '÷': return b===0?'Error':a/b; }
-        return b;
-    }
+    function calculate(a, b, operator) { a = parseFloat(a); b = parseFloat(b); switch (operator) { case '+': return a+b; case '−': return a-b; case '×': return a*b; case '÷': return b===0?'Error':a/b; } return b; }
     function inputOp(o) {
         if (op && !fresh) { current = fmt(calculate(prev, current, op)); updateDisplay(); }
         prev = current; op = o; fresh = true; justEq = false;
         exprEl.textContent = prev + ' ' + op;
         document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
-        var ab = document.querySelector('.btn.op[data-op="'+o+'"]');
-        if (ab) ab.classList.add('active');
+        var ab = document.querySelector('.btn.op[data-op="'+o+'"]'); if (ab) ab.classList.add('active');
     }
     function doEq() {
         if (op && prev !== null) {
             exprEl.textContent = prev + ' ' + op + ' ' + current + ' =';
-            current = fmt(calculate(prev, current, op));
-            prev = null; op = null; fresh = true; justEq = true;
-            updateDisplay();
-            document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
+            current = fmt(calculate(prev, current, op)); prev = null; op = null; fresh = true; justEq = true;
+            updateDisplay(); document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
         }
     }
-    function doClear() {
-        current = '0'; prev = null; op = null; fresh = true; justEq = false;
-        exprEl.textContent = ''; updateDisplay();
-        document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')});
-    }
+    function doClear() { current = '0'; prev = null; op = null; fresh = true; justEq = false; exprEl.textContent = ''; updateDisplay(); document.querySelectorAll('.btn.op').forEach(function(b){b.classList.remove('active')}); }
     function doSign() { if (current !== '0' && current !== 'Error') { current = current.startsWith('-')?current.slice(1):'-'+current; updateDisplay(); } }
     function doPercent() { if (current !== 'Error') { current = fmt(parseFloat(current)/100); updateDisplay(); } }
 
     document.querySelector('.buttons').addEventListener('click', function(e) {
         var btn = e.target.closest('.btn'); if (!btn) return;
         var a = btn.dataset.action;
-        if (a === 'num') inputNum(btn.dataset.num);
-        else if (a === 'op') inputOp(btn.dataset.op);
-        else if (a === 'eq') doEq();
-        else if (a === 'clear') doClear();
-        else if (a === 'sign') doSign();
-        else if (a === 'percent') doPercent();
+        if (a === 'num') inputNum(btn.dataset.num); else if (a === 'op') inputOp(btn.dataset.op);
+        else if (a === 'eq') doEq(); else if (a === 'clear') doClear();
+        else if (a === 'sign') doSign(); else if (a === 'percent') doPercent();
         else if (a === 'decimal') inputNum('.');
     });
-
     document.addEventListener('keydown', function(e) {
         if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
         var k = e.key;
-        if (k >= '0' && k <= '9') { inputNum(k); e.preventDefault(); }
-        else if (k === '.') { inputNum('.'); e.preventDefault(); }
-        else if (k === '+') { inputOp('+'); e.preventDefault(); }
-        else if (k === '-') { inputOp('−'); e.preventDefault(); }
-        else if (k === '*') { inputOp('×'); e.preventDefault(); }
-        else if (k === '/') { inputOp('÷'); e.preventDefault(); }
-        else if (k === 'Enter' || k === '=') { doEq(); e.preventDefault(); }
-        else if (k === 'Escape' || k === 'c' || k === 'C') { doClear(); e.preventDefault(); }
+        if (k >= '0' && k <= '9') { inputNum(k); e.preventDefault(); } else if (k === '.') { inputNum('.'); e.preventDefault(); }
+        else if (k === '+') { inputOp('+'); e.preventDefault(); } else if (k === '-') { inputOp('−'); e.preventDefault(); }
+        else if (k === '*') { inputOp('×'); e.preventDefault(); } else if (k === '/') { inputOp('÷'); e.preventDefault(); }
+        else if (k === 'Enter' || k === '=') { doEq(); e.preventDefault(); } else if (k === 'Escape' || k === 'c' || k === 'C') { doClear(); e.preventDefault(); }
         else if (k === 'Backspace') { current = current.length > 1 ? current.slice(0,-1) : '0'; updateDisplay(); e.preventDefault(); }
         else if (k === '%') { doPercent(); e.preventDefault(); }
     });
 
-    // ── Currency Converter ──
-    var rates = {};  // rates relative to USD (1 USD = X currency)
-    var inputs = {
-        CNY: document.getElementById('fx-cny'),
-        USD: document.getElementById('fx-usd'),
-        EUR: document.getElementById('fx-eur'),
-        GBP: document.getElementById('fx-gbp')
-    };
+    // ── Currency ──
+    var rates = {};
+    var inputs = { CNY: document.getElementById('fx-cny'), USD: document.getElementById('fx-usd'), EUR: document.getElementById('fx-eur'), GBP: document.getElementById('fx-gbp') };
     var activeSource = null;
 
     function fetchRates() {
@@ -264,64 +233,30 @@
             .then(function(data) {
                 if (data.result === 'success') {
                     rates = data.rates;
-                    var tags = document.getElementById('fx-rates');
-                    tags.innerHTML = '';
-                    // Show cross rates based on CNY
-                    var pairs = [
-                        { from: 'CNY', to: 'USD', rate: 1 / rates.CNY },
-                        { from: 'CNY', to: 'EUR', rate: rates.EUR / rates.CNY },
-                        { from: 'CNY', to: 'GBP', rate: rates.GBP / rates.CNY }
-                    ];
-                    pairs.forEach(function(p) {
-                        var tag = document.createElement('span');
-                        tag.className = 'fx-rate-tag';
-                        tag.textContent = '1 ' + p.from + ' = ' + p.rate.toFixed(4) + ' ' + p.to;
-                        tags.appendChild(tag);
+                    var tags = document.getElementById('fx-rates'); tags.innerHTML = '';
+                    [{from:'CNY',to:'USD',r:1/rates.CNY},{from:'CNY',to:'EUR',r:rates.EUR/rates.CNY},{from:'CNY',to:'GBP',r:rates.GBP/rates.CNY}].forEach(function(p) {
+                        var t = document.createElement('span'); t.className = 'fx-rate-tag'; t.textContent = '1 ' + p.from + ' = ' + p.r.toFixed(4) + ' ' + p.to; tags.appendChild(t);
                     });
                     var now = new Date();
                     document.getElementById('fx-update').textContent = now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-                    // Re-convert if there's an active source
                     if (activeSource) convertFrom(activeSource);
-                } else {
-                    document.getElementById('fx-update').textContent = '获取失败';
-                }
+                } else { document.getElementById('fx-update').textContent = '获取失败'; }
             })
             .catch(function() { document.getElementById('fx-update').textContent = '网络错误'; });
     }
 
-    function convertFrom(sourceCurrency) {
-        var val = parseFloat(inputs[sourceCurrency].value.replace(/,/g, ''));
-        if (isNaN(val)) {
-            Object.keys(inputs).forEach(function(c) { if (c !== sourceCurrency) inputs[c].value = ''; });
-            return;
-        }
-        // Convert source → USD first, then USD → others
-        var usdVal = val / rates[sourceCurrency];
-        Object.keys(inputs).forEach(function(c) {
-            if (c === sourceCurrency) return;
-            var result = usdVal * rates[c];
-            inputs[c].value = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        });
+    function convertFrom(src) {
+        var val = parseFloat(inputs[src].value.replace(/,/g, ''));
+        if (isNaN(val)) { Object.keys(inputs).forEach(function(c) { if (c !== src) inputs[c].value = ''; }); return; }
+        var usdVal = val / rates[src];
+        Object.keys(inputs).forEach(function(c) { if (c !== src) inputs[c].value = (usdVal * rates[c]).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); });
     }
 
-    // Bind input events
     Object.keys(inputs).forEach(function(currency) {
         var el = inputs[currency];
-        el.addEventListener('input', function() {
-            activeSource = currency;
-            // Highlight active source
-            Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); });
-            el.classList.add('active-source');
-            convertFrom(currency);
-        });
-        el.addEventListener('focus', function() {
-            activeSource = currency;
-            Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); });
-            el.classList.add('active-source');
-        });
-        el.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') { convertFrom(currency); e.preventDefault(); }
-        });
+        el.addEventListener('input', function() { activeSource = currency; Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); }); el.classList.add('active-source'); convertFrom(currency); });
+        el.addEventListener('focus', function() { activeSource = currency; Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); }); el.classList.add('active-source'); });
+        el.addEventListener('keydown', function(e) { if (e.key === 'Enter') { convertFrom(currency); e.preventDefault(); } });
     });
 
     fetchRates();
