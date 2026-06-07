@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'none'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://open.er-api.com; img-src 'self' data:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'">
+    <title>Calculator</title>
+    <style>
+        /* Self-hosted fonts */
+        @font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/inter-300.woff2) format('woff2')}
+        @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-400.woff2) format('woff2')}
+        @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-500.woff2) format('woff2')}
+        @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-600.woff2) format('woff2')}
+        @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/jbm-300.woff2) format('woff2')}
+        @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jbm-400.woff2) format('woff2')}
+        @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/jbm-500.woff2) format('woff2')}
+
+        :root {
+            --bg: #f5f5f7; --card: #fff; --ink: #1d1d1f; --muted: #86868b;
+            --border: rgba(0,0,0,0.04); --accent: #0071e3; --accent2: #34c759;
+            --btn: #f8f8fa; --btn-hover: #e8e8ed; --btn-active: #d4d4d8;
+            --op: #ff9500; --op-hover: #e68600; --op-active: #cc7700;
+            --eq: #0071e3; --eq-hover: #0060c0; --eq-active: #0050a0;
+            --mono: 'JetBrains Mono', monospace; --sans: 'Inter', -apple-system, sans-serif;
+            --radius: 16px; --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.03);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; }
+
+        .shell { width: 380px; padding: 20px; }
+
+        /* ── Mode Tabs ── */
+        .tabs { display: flex; gap: 4px; margin-bottom: 16px; background: rgba(0,0,0,0.04); border-radius: 12px; padding: 4px; }
+        .tab { flex: 1; text-align: center; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.2s; border: none; background: none; }
+        .tab:hover { color: var(--ink); }
+        .tab.active { background: var(--card); color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,0.08); font-weight: 600; }
+
+        /* ── Calculator Card ── */
+        .calc-card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+
+        /* ── Display ── */
+        .display { padding: 28px 24px 20px; text-align: right; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .display-expr { font-family: var(--mono); font-size: 14px; color: var(--muted); min-height: 20px; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .display-val { font-family: var(--mono); font-size: 48px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: font-size 0.15s; }
+        .display-val.small { font-size: 32px; }
+        .display-val.xsmall { font-size: 24px; }
+
+        /* ── Buttons Grid ── */
+        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; padding: 1px; background: var(--border); }
+        .btn { font-family: var(--sans); font-size: 22px; font-weight: 400; padding: 20px; border: none; cursor: pointer; transition: all 0.1s; outline: none; position: relative; user-select: none; }
+        .btn:active { transform: scale(0.96); }
+        .btn.num { background: var(--btn); color: var(--ink); }
+        .btn.num:hover { background: var(--btn-hover); }
+        .btn.num:active { background: var(--btn-active); }
+        .btn.op { background: var(--op); color: #fff; font-size: 26px; font-weight: 500; }
+        .btn.op:hover { background: var(--op-hover); }
+        .btn.op:active { background: var(--op-active); }
+        .btn.op.active { background: var(--op-active); }
+        .btn.eq { background: var(--eq); color: #fff; font-size: 26px; font-weight: 500; }
+        .btn.eq:hover { background: var(--eq-hover); }
+        .btn.eq:active { background: var(--eq-active); }
+        .btn.fn { background: #e8e8ed; color: var(--ink); font-size: 17px; font-weight: 500; }
+        .btn.fn:hover { background: #dddde2; }
+        .btn.fn:active { background: #d0d0d5; }
+        .btn.zero { grid-column: span 2; text-align: left; padding-left: 32px; }
+
+        /* ── Currency Panel ── */
+        .currency-panel { display: none; }
+        .currency-panel.active { display: block; }
+        .calc-panel.active { display: block; }
+        .calc-panel { display: none; }
+
+        .fx-card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); padding: 24px; }
+        .fx-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .fx-title { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+        .fx-rate { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+        .fx-loading { color: var(--muted); font-size: 12px; }
+
+        .fx-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .fx-flag { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .fx-flag.usd { background: #eff6ff; } .fx-flag.cny { background: #fef2f2; }
+        .fx-input-wrap { flex: 1; }
+        .fx-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+        .fx-input { width: 100%; font-family: var(--mono); font-size: 28px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; }
+        .fx-input::placeholder { color: #d1d1d6; }
+
+        .fx-swap { display: flex; justify-content: center; margin: -4px 0; }
+        .fx-swap-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--muted); transition: all 0.2s; }
+        .fx-swap-btn:hover { border-color: var(--accent); color: var(--accent); transform: rotate(180deg); }
+
+        .fx-info { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .fx-update { font-size: 11px; color: var(--muted); }
+        .fx-powered { font-size: 10px; color: #c7c7cc; }
+
+        /* ── Responsive ── */
+        @media (max-width: 420px) {
+            .shell { width: 100%; padding: 12px; }
+            .btn { padding: 16px; font-size: 19px; }
+            .btn.op, .btn.eq { font-size: 22px; }
+            .display-val { font-size: 38px; }
+            .fx-input { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+<div class="shell">
+    <div class="tabs">
+        <button class="tab active" data-mode="calc">计算器</button>
+        <button class="tab" data-mode="fx">汇率换算</button>
+    </div>
+
+    <!-- Calculator -->
+    <div class="calc-panel active">
+        <div class="calc-card">
+            <div class="display">
+                <div class="display-expr" id="expr"></div>
+                <div class="display-val" id="display">0</div>
+            </div>
+            <div class="buttons">
+                <button class="btn fn" data-action="clear">AC</button>
+                <button class="btn fn" data-action="sign">+/−</button>
+                <button class="btn fn" data-action="percent">%</button>
+                <button class="btn op" data-action="op" data-op="÷">÷</button>
+
+                <button class="btn num" data-action="num" data-num="7">7</button>
+                <button class="btn num" data-action="num" data-num="8">8</button>
+                <button class="btn num" data-action="num" data-num="9">9</button>
+                <button class="btn op" data-action="op" data-op="×">×</button>
+
+                <button class="btn num" data-action="num" data-num="4">4</button>
+                <button class="btn num" data-action="num" data-num="5">5</button>
+                <button class="btn num" data-action="num" data-num="6">6</button>
+                <button class="btn op" data-action="op" data-op="−">−</button>
+
+                <button class="btn num" data-action="num" data-num="1">1</button>
+                <button class="btn num" data-action="num" data-num="2">2</button>
+                <button class="btn num" data-action="num" data-num="3">3</button>
+                <button class="btn op" data-action="op" data-op="+">+</button>
+
+                <button class="btn num zero" data-action="num" data-num="0">0</button>
+                <button class="btn num" data-action="decimal">.</button>
+                <button class="btn eq" data-action="eq">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currency Converter -->
+    <div class="currency-panel">
+        <div class="fx-card">
+            <div class="fx-header">
+                <div class="fx-title">USD / CNY</div>
+                <div class="fx-rate" id="fx-rate">加载中...</div>
+            </div>
+
+            <div class="fx-row">
+                <div class="fx-flag usd">🇺🇸</div>
+                <div class="fx-input-wrap">
+                    <div class="fx-label">美元 USD</div>
+                    <input type="text" class="fx-input" id="fx-usd" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="fx-swap">
+                <button class="fx-swap-btn" id="fx-swap" title="切换方向">⇅</button>
+            </div>
+
+            <div class="fx-row">
+                <div class="fx-flag cny">🇨🇳</div>
+                <div class="fx-input-wrap">
+                    <div class="fx-label">人民币 CNY</div>
+                    <input type="text" class="fx-input" id="fx-cny" placeholder="0.00" inputmode="decimal" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="fx-info">
+                <div class="fx-update" id="fx-update">汇率数据加载中...</div>
+                <div class="fx-powered">open.er-api.com</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ── Mode Tabs ──
+    var tabs = document.querySelectorAll('.tab');
+    var calcPanel = document.querySelector('.calc-panel');
+    var fxPanel = document.querySelector('.currency-panel');
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+            if (tab.dataset.mode === 'calc') {
+                calcPanel.classList.add('active');
+                fxPanel.classList.remove('active');
+            } else {
+                calcPanel.classList.remove('active');
+                fxPanel.classList.add('active');
+                if (!fxLoaded) fetchRate();
+            }
+        });
+    });
+
+    // ── Calculator ──
+    var display = document.getElementById('display');
+    var exprEl = document.getElementById('expr');
+    var current = '0', prev = null, op = null, fresh = true, justEq = false;
+
+    function fmt(n) {
+        if (n === 'Error') return 'Error';
+        var s = String(n);
+        if (s.length > 12) {
+            var parsed = parseFloat(s);
+            if (Math.abs(parsed) >= 1e12 || (Math.abs(parsed) < 1e-6 && parsed !== 0)) {
+                return parsed.toExponential(6);
+            }
+            s = parsed.toPrecision(10).replace(/\.?0+$/, '');
+        }
+        return s;
+    }
+
+    function updateDisplay() {
+        display.textContent = current;
+        display.className = 'display-val' + (current.length > 11 ? ' xsmall' : current.length > 8 ? ' small' : '');
+    }
+
+    function inputNum(n) {
+        if (justEq) { prev = null; op = null; justEq = false; }
+        if (fresh) { current = n === '.' ? '0.' : n; fresh = false; }
+        else {
+            if (n === '.' && current.includes('.')) return;
+            if (current === '0' && n !== '.') current = n;
+            else current += n;
+        }
+        justEq = false;
+        updateDisplay();
+    }
+
+    function calculate(a, b, operator) {
+        a = parseFloat(a); b = parseFloat(b);
+        switch (operator) {
+            case '+': return a + b;
+            case '−': return a - b;
+            case '×': return a * b;
+            case '÷': return b === 0 ? 'Error' : a / b;
+        }
+        return b;
+    }
+
+    function inputOp(o) {
+        if (op && !fresh) {
+            var result = calculate(prev, current, op);
+            current = fmt(result);
+            updateDisplay();
+        }
+        prev = current;
+        op = o;
+        fresh = true;
+        justEq = false;
+        exprEl.textContent = prev + ' ' + op;
+        // Highlight active operator button
+        document.querySelectorAll('.btn.op').forEach(function(b) { b.classList.remove('active'); });
+        var activeBtn = document.querySelector('.btn.op[data-op="' + o + '"]');
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function doEq() {
+        if (op && prev !== null) {
+            exprEl.textContent = prev + ' ' + op + ' ' + current + ' =';
+            var result = calculate(prev, current, op);
+            current = fmt(result);
+            prev = null; op = null; fresh = true; justEq = true;
+            updateDisplay();
+            document.querySelectorAll('.btn.op').forEach(function(b) { b.classList.remove('active'); });
+        }
+    }
+
+    function doClear() {
+        current = '0'; prev = null; op = null; fresh = true; justEq = false;
+        exprEl.textContent = '';
+        updateDisplay();
+        document.querySelectorAll('.btn.op').forEach(function(b) { b.classList.remove('active'); });
+    }
+
+    function doSign() {
+        if (current !== '0' && current !== 'Error') {
+            current = current.startsWith('-') ? current.slice(1) : '-' + current;
+            updateDisplay();
+        }
+    }
+
+    function doPercent() {
+        if (current !== 'Error') {
+            current = fmt(parseFloat(current) / 100);
+            updateDisplay();
+        }
+    }
+
+    // Button clicks
+    document.querySelector('.buttons').addEventListener('click', function(e) {
+        var btn = e.target.closest('.btn');
+        if (!btn) return;
+        var action = btn.dataset.action;
+        if (action === 'num') inputNum(btn.dataset.num);
+        else if (action === 'op') inputOp(btn.dataset.op);
+        else if (action === 'eq') doEq();
+        else if (action === 'clear') doClear();
+        else if (action === 'sign') doSign();
+        else if (action === 'percent') doPercent();
+        else if (action === 'decimal') inputNum('.');
+    });
+
+    // Keyboard support
+    document.addEventListener('keydown', function(e) {
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+        var key = e.key;
+        if (key >= '0' && key <= '9') { inputNum(key); e.preventDefault(); }
+        else if (key === '.') { inputNum('.'); e.preventDefault(); }
+        else if (key === '+') { inputOp('+'); e.preventDefault(); }
+        else if (key === '-') { inputOp('−'); e.preventDefault(); }
+        else if (key === '*') { inputOp('×'); e.preventDefault(); }
+        else if (key === '/') { inputOp('÷'); e.preventDefault(); }
+        else if (key === 'Enter' || key === '=') { doEq(); e.preventDefault(); }
+        else if (key === 'Escape' || key === 'c' || key === 'C') { doClear(); e.preventDefault(); }
+        else if (key === 'Backspace') {
+            if (current.length > 1) current = current.slice(0, -1);
+            else current = '0';
+            updateDisplay(); e.preventDefault();
+        }
+        else if (key === '%') { doPercent(); e.preventDefault(); }
+    });
+
+    // ── Currency Converter ──
+    var fxUsd = document.getElementById('fx-usd');
+    var fxCny = document.getElementById('fx-cny');
+    var fxRate = document.getElementById('fx-rate');
+    var fxUpdate = document.getElementById('fx-update');
+    var fxSwap = document.getElementById('fx-swap');
+    var fxLoaded = false, rate = null, direction = 'usd2cny';
+
+    function fetchRate() {
+        fxRate.textContent = '加载中...';
+        fxUpdate.textContent = '正在获取最新汇率...';
+        fetch('https://open.er-api.com/v6/latest/USD')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.result === 'success') {
+                    rate = data.rates.CNY;
+                    fxLoaded = true;
+                    fxRate.textContent = '1 USD = ' + rate.toFixed(4) + ' CNY';
+                    var now = new Date();
+                    fxUpdate.textContent = '更新: ' + now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+                    convert();
+                } else {
+                    fxRate.textContent = '获取失败';
+                    fxUpdate.textContent = '请稍后重试';
+                }
+            })
+            .catch(function() {
+                fxRate.textContent = '网络错误';
+                fxUpdate.textContent = '请检查网络连接';
+            });
+    }
+
+    function convert() {
+        if (!rate) return;
+        if (direction === 'usd2cny') {
+            var usd = parseFloat(fxUsd.value.replace(/,/g, ''));
+            if (isNaN(usd)) { fxCny.value = ''; return; }
+            fxCny.value = (usd * rate).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        } else {
+            var cny = parseFloat(fxCny.value.replace(/,/g, ''));
+            if (isNaN(cny)) { fxUsd.value = ''; return; }
+            fxUsd.value = (cny / rate).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+    }
+
+    fxUsd.addEventListener('input', function() {
+        direction = 'usd2cny';
+        convert();
+    });
+    fxCny.addEventListener('input', function() {
+        direction = 'cny2usd';
+        convert();
+    });
+
+    fxSwap.addEventListener('click', function() {
+        direction = direction === 'usd2cny' ? 'cny2usd' : 'usd2cny';
+        if (direction === 'usd2cny') {
+            fxRate.textContent = '1 USD = ' + rate.toFixed(4) + ' CNY';
+        } else {
+            fxRate.textContent = '1 CNY = ' + (1/rate).toFixed(4) + ' USD';
+        }
+        convert();
+    });
+
+    // Keyboard: Enter in fx inputs triggers convert
+    [fxUsd, fxCny].forEach(function(el) {
+        el.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { convert(); e.preventDefault(); }
+        });
+    });
+
+})();
+</script>
+</body>
+</html>
