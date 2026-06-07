@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,22 +28,21 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; padding: 20px; }
 
-        .shell { display: flex; gap: 20px; align-items: stretch; max-width: 780px; width: 100%; }
+        .shell { display: flex; gap: 20px; align-items: stretch; width: 100%; max-width: 800px; }
 
-        .col { flex: 1; min-width: 0; }
-        .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+        .col { flex: 1; min-width: 0; display: flex; }
+        .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; flex: 1; display: flex; flex-direction: column; }
 
         /* ── Calculator ── */
-        .display { padding: 28px var(--pad) 18px; text-align: right; }
+        .display { padding: 28px var(--pad) 18px; text-align: right; flex-shrink: 0; }
         .display-expr { font-family: var(--mono); font-size: 13px; color: var(--muted); min-height: 18px; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .display-val { font-family: var(--mono); font-size: 44px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: font-size 0.15s; }
+        .display-val { font-family: var(--mono); font-size: 44px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .display-val.small { font-size: 30px; }
         .display-val.xsmall { font-size: 22px; }
 
-        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; padding: 1px; background: var(--border); flex: 1; }
-        .btn { font-family: var(--sans); font-size: 22px; font-weight: 400; border: none; cursor: pointer; transition: all 0.1s; outline: none; user-select: none; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; padding: 1px; background: var(--border); flex: 1; }
+        .btn { font-family: var(--sans); font-size: 22px; font-weight: 400; border: none; cursor: pointer; transition: all 0.1s; outline: none; user-select: none; display: flex; align-items: center; justify-content: center; background: var(--btn); color: var(--ink); }
         .btn:active { transform: scale(0.96); }
-        .btn.num { background: var(--btn); color: var(--ink); }
         .btn.num:hover { background: var(--btn-hover); }
         .btn.num:active { background: var(--btn-active); }
         .btn.op { background: var(--op); color: #fff; font-size: 26px; font-weight: 500; }
@@ -58,7 +57,8 @@
         .btn.fn:active { background: #d0d0d5; }
 
         /* ── Currency ── */
-        .fx-title { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 20px var(--pad) 0; }
+        .fx-header { padding: 20px var(--pad) 0; flex-shrink: 0; }
+        .fx-title { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
         .fx-rows { padding: 16px var(--pad); flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
         .fx-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: #fafafa; border: 1px solid transparent; transition: all 0.2s; flex: 1; }
@@ -69,17 +69,14 @@
         .fx-input::placeholder { color: #d1d1d6; }
         .fx-input.active-source { color: var(--accent); }
 
-        .fx-rates { padding: 0 var(--pad); display: flex; flex-wrap: wrap; gap: 8px; }
+        .fx-rates { padding: 0 var(--pad); display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
         .fx-rate-tag { font-family: var(--mono); font-size: 10px; padding: 4px 8px; border-radius: 6px; background: #f0fdf4; color: #16a34a; }
-        .fx-footer { padding: 12px var(--pad) 16px; font-size: 10px; color: #c7c7cc; display: flex; justify-content: space-between; }
+        .fx-footer { padding: 12px var(--pad) 16px; font-size: 10px; color: #c7c7cc; display: flex; justify-content: space-between; flex-shrink: 0; }
 
-        @media (max-width: 780px) {
-            .shell { flex-direction: column; align-items: center; max-width: 380px; }
-            .col { width: 100%; }
-            .card { height: auto; }
-            .buttons { min-height: 260px; }
+        @media (max-width: 800px) {
+            .shell { flex-direction: column; max-width: 400px; }
         }
-        @media (max-width: 400px) {
+        @media (max-width: 420px) {
             body { padding: 10px; }
             .btn { font-size: 19px; }
             .btn.op, .btn.eq { font-size: 23px; }
@@ -129,7 +126,9 @@
     <!-- Currency Converter -->
     <div class="col">
         <div class="card">
-            <div class="fx-title">实时汇率换算</div>
+            <div class="fx-header">
+                <div class="fx-title">Exchange Rate</div>
+            </div>
             <div class="fx-rows">
                 <div class="fx-row">
                     <span class="fx-code">CNY</span>
@@ -154,7 +153,7 @@
             </div>
             <div class="fx-rates" id="fx-rates"></div>
             <div class="fx-footer">
-                <span id="fx-update">加载中...</span>
+                <span id="fx-update">Loading...</span>
                 <span>open.er-api.com</span>
             </div>
         </div>
@@ -227,7 +226,7 @@
     var activeSource = null;
 
     function fetchRates() {
-        document.getElementById('fx-update').textContent = '正在获取...';
+        document.getElementById('fx-update').textContent = 'Loading...';
         fetch('https://open.er-api.com/v6/latest/USD')
             .then(function(r) { return r.json(); })
             .then(function(data) {
@@ -240,9 +239,9 @@
                     var now = new Date();
                     document.getElementById('fx-update').textContent = now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
                     if (activeSource) convertFrom(activeSource);
-                } else { document.getElementById('fx-update').textContent = '获取失败'; }
+                } else { document.getElementById('fx-update').textContent = 'Failed'; }
             })
-            .catch(function() { document.getElementById('fx-update').textContent = '网络错误'; });
+            .catch(function() { document.getElementById('fx-update').textContent = 'Network Error'; });
     }
 
     function convertFrom(src) {
