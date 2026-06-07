@@ -16,65 +16,68 @@
         @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/jbm-500.woff2) format('woff2')}
 
         :root {
-            --bg: #f5f5f7; --card: #fff; --ink: #1d1d1f; --muted: #86868b;
-            --border: rgba(0,0,0,0.06); --accent: #0071e3;
-            --btn: #f8f8fa; --btn-hover: #e8e8ed; --btn-active: #d4d4d8;
-            --op: #ff9500; --op-hover: #e68600; --op-active: #cc7700;
-            --eq: #0071e3; --eq-hover: #0060c0; --eq-active: #0050a0;
+            --bg: #1a1a2e; --card: #16213e; --card2: #0f3460;
+            --ink: #e8e8e8; --muted: #7f8c9b; --dim: #4a5568;
+            --accent: #4fc3f7; --accent2: #81c784;
+            --border: rgba(255,255,255,0.06);
+            --btn: #1e2a4a; --btn-hover: #253356; --btn-active: #2d3f6a;
+            --op: #e67e22; --op-hover: #d35400; --op-active: #bf6516;
+            --eq: #4fc3f7; --eq-hover: #29b6f6; --eq-active: #0288d1;
+            --fn: #2d3f6a; --fn-hover: #34495e; --fn-active: #3d566e;
             --mono: 'JetBrains Mono', monospace; --sans: 'Inter', -apple-system, sans-serif;
-            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.03);
-            --radius: 20px; --pad: 24px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --radius: 18px; --pad: 22px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: var(--sans); background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; padding: 20px; }
 
         .shell { display: flex; gap: 20px; align-items: stretch; width: 100%; max-width: 900px; }
-
-        .col { flex: 1; min-width: 0; display: flex; }
+        .col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
         .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; flex: 1; display: flex; flex-direction: column; }
 
+        /* ── Section Title ── */
+        .section-title { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; padding-left: 2px; }
+
         /* ── Calculator ── */
-        .display { padding: 32px var(--pad) 20px; text-align: right; flex-shrink: 0; }
-        .display-expr { font-family: var(--mono); font-size: 15px; color: var(--muted); min-height: 20px; margin-bottom: 10px; letter-spacing: 0.5px; }
-        .display-val { font-family: var(--mono); font-size: 52px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .display-val.small { font-size: 36px; }
-        .display-val.xsmall { font-size: 26px; }
+        .display { padding: 28px var(--pad) 18px; text-align: right; flex-shrink: 0; background: linear-gradient(180deg, rgba(79,195,247,0.04) 0%, transparent 100%); }
+        .display-expr { font-family: var(--mono); font-size: 14px; color: var(--muted); min-height: 20px; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .display-val { font-family: var(--mono); font-size: 50px; font-weight: 300; color: var(--ink); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .display-val.small { font-size: 34px; }
+        .display-val.xsmall { font-size: 24px; }
 
         .buttons { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; padding: 1px; background: var(--border); flex: 1; }
-        .btn { font-family: var(--sans); font-size: 26px; font-weight: 400; border: none; cursor: pointer; transition: all 0.1s; outline: none; user-select: none; display: flex; align-items: center; justify-content: center; background: var(--btn); color: var(--ink); }
-        .btn:active { transform: scale(0.96); }
-        .btn.num:hover { background: var(--btn-hover); }
-        .btn.num:active { background: var(--btn-active); }
+        .btn { font-family: var(--sans); font-size: 26px; font-weight: 400; border: none; cursor: pointer; transition: all 0.12s; outline: none; user-select: none; display: flex; align-items: center; justify-content: center; background: var(--btn); color: var(--ink); }
+        .btn:hover { background: var(--btn-hover); }
+        .btn:active { background: var(--btn-active); transform: scale(0.97); }
         .btn.op { background: var(--op); color: #fff; font-size: 30px; font-weight: 500; }
         .btn.op:hover { background: var(--op-hover); }
         .btn.op:active { background: var(--op-active); }
         .btn.op.active { background: var(--op-active); }
-        .btn.eq { background: var(--eq); color: #fff; font-size: 30px; font-weight: 500; }
+        .btn.eq { background: var(--eq); color: #1a1a2e; font-size: 30px; font-weight: 600; }
         .btn.eq:hover { background: var(--eq-hover); }
         .btn.eq:active { background: var(--eq-active); }
-        .btn.fn { background: #e8e8ed; color: var(--ink); font-size: 19px; font-weight: 500; }
-        .btn.fn:hover { background: #dddde2; }
-        .btn.fn:active { background: #d0d0d5; }
+        .btn.fn { background: var(--fn); color: var(--muted); font-size: 18px; font-weight: 500; }
+        .btn.fn:hover { background: var(--fn-hover); }
+        .btn.fn:active { background: var(--fn-active); }
 
         /* ── Currency ── */
-        .fx-header { padding: 20px var(--pad) 0; flex-shrink: 0; }
-        .fx-title { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-        .fx-rows { padding: 16px var(--pad); flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .fx-header { padding: 18px var(--pad) 0; flex-shrink: 0; }
+        .fx-rows { padding: 14px var(--pad); flex: 1; display: flex; flex-direction: column; gap: 8px; }
 
-        .fx-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; background: #fafafa; border: 1px solid transparent; transition: all 0.2s; flex: 1; }
-        .fx-row:focus-within { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.08); }
-        .fx-code { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--accent); width: 42px; flex-shrink: 0; text-align: center; }
-        .fx-divider { width: 1px; height: 32px; background: var(--border); flex-shrink: 0; }
+        .fx-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid transparent; transition: all 0.2s; flex: 1; }
+        .fx-row:focus-within { border-color: var(--accent); background: rgba(79,195,247,0.06); }
+        .fx-code { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--accent); width: 42px; flex-shrink: 0; text-align: center; }
+        .fx-divider { width: 1px; height: 30px; background: var(--border); flex-shrink: 0; }
         .fx-input { flex: 1; font-family: var(--mono); font-size: 28px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; min-width: 0; }
-        .fx-input::placeholder { color: #d1d1d6; }
+        .fx-input::placeholder { color: var(--dim); }
         .fx-input.active-source { color: var(--accent); }
 
         .fx-rates { padding: 0 var(--pad); display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
-        .fx-rate-tag { font-family: var(--mono); font-size: 11px; padding: 4px 8px; border-radius: 6px; background: #f0fdf4; color: #16a34a; }
-        .fx-footer { padding: 14px var(--pad) 18px; font-size: 11px; color: #c7c7cc; display: flex; justify-content: space-between; flex-shrink: 0; }
+        .fx-rate-tag { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 6px; background: rgba(129,199,132,0.12); color: var(--accent2); }
+        .fx-footer { padding: 12px var(--pad) 16px; font-size: 10px; color: var(--dim); display: flex; justify-content: space-between; flex-shrink: 0; }
 
         @media (max-width: 800px) {
-            .shell { flex-direction: column; max-width: 400px; }
+            .shell { flex-direction: column; max-width: 420px; }
         }
         @media (max-width: 420px) {
             body { padding: 10px; }
@@ -90,6 +93,7 @@
 
     <!-- Calculator -->
     <div class="col">
+        <div class="section-title">Calculator</div>
         <div class="card">
             <div class="display">
                 <div class="display-expr" id="expr"></div>
@@ -125,10 +129,8 @@
 
     <!-- Currency Converter -->
     <div class="col">
+        <div class="section-title">Exchange Rate</div>
         <div class="card">
-            <div class="fx-header">
-                <div class="fx-title">Exchange Rate</div>
-            </div>
             <div class="fx-rows">
                 <div class="fx-row">
                     <span class="fx-code">CNY</span>
