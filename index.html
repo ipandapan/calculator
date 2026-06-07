@@ -17,7 +17,7 @@
 
         :root {
             --bg: #f5f5f7; --card: #fff; --ink: #1d1d1f; --muted: #86868b;
-            --border: rgba(0,0,0,0.04); --accent: #0071e3; --accent2: #34c759;
+            --border: rgba(0,0,0,0.06); --accent: #0071e3; --accent2: #34c759;
             --btn: #f8f8fa; --btn-hover: #e8e8ed; --btn-active: #d4d4d8;
             --op: #ff9500; --op-hover: #e68600; --op-active: #cc7700;
             --eq: #0071e3; --eq-hover: #0060c0; --eq-active: #0050a0;
@@ -58,28 +58,22 @@
         .btn.zero { grid-column: span 2; text-align: left; padding-left: 28px; }
 
         /* ── Currency Column ── */
-        .fx-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+        .fx-col { flex: 1; min-width: 0; }
+        .fx-card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); padding: 24px; }
+        .fx-title { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
 
-        .fx-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); padding: 18px 20px; }
-        .fx-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .fx-pair { font-size: 13px; font-weight: 600; color: var(--ink); }
-        .fx-badge { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 6px; background: #f0fdf4; color: #16a34a; }
-
-        .fx-row { display: flex; align-items: center; gap: 10px; }
-        .fx-flag { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
-        .fx-input-wrap { flex: 1; }
-        .fx-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
-        .fx-input { width: 100%; font-family: var(--mono); font-size: 22px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; }
+        .fx-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 10px 12px; border-radius: 12px; background: #fafafa; border: 1px solid transparent; transition: all 0.2s; }
+        .fx-row:focus-within { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.08); }
+        .fx-code { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent); width: 36px; flex-shrink: 0; text-align: center; }
+        .fx-divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+        .fx-input { flex: 1; font-family: var(--mono); font-size: 22px; font-weight: 300; border: none; background: none; color: var(--ink); outline: none; text-align: right; min-width: 0; }
         .fx-input::placeholder { color: #d1d1d6; }
+        .fx-input.active-source { color: var(--accent); }
 
-        .fx-swap { display: flex; justify-content: center; margin: -2px 0; }
-        .fx-swap-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--muted); transition: all 0.2s; }
-        .fx-swap-btn:hover { border-color: var(--accent); color: var(--accent); transform: rotate(180deg); }
+        .fx-rates { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 8px; }
+        .fx-rate-tag { font-family: var(--mono); font-size: 10px; padding: 4px 8px; border-radius: 6px; background: #f0fdf4; color: #16a34a; }
+        .fx-footer { margin-top: 12px; font-size: 10px; color: #c7c7cc; display: flex; justify-content: space-between; }
 
-        .fx-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 10px; color: #c7c7cc; display: flex; justify-content: space-between; }
-        .fx-update { color: var(--muted); }
-
-        /* ── Responsive ── */
         @media (max-width: 780px) {
             .shell { flex-direction: column; align-items: center; }
             .calc-col { flex: none; width: 100%; max-width: 360px; }
@@ -134,77 +128,35 @@
 
     <!-- Currency Converter -->
     <div class="fx-col">
-        <!-- USD / CNY -->
-        <div class="fx-card" id="fx-usd-cny">
-            <div class="fx-header">
-                <span class="fx-pair">USD / CNY</span>
-                <span class="fx-badge" id="rate-usd-cny">--</span>
-            </div>
-            <div class="fx-row">
-                <span class="fx-flag">🇺🇸</span>
-                <div class="fx-input-wrap">
-                    <div class="fx-label">美元 USD</div>
-                    <input type="text" class="fx-input fx-src" data-pair="usd-cny" data-from="USD" data-to="CNY" placeholder="0.00" inputmode="decimal" autocomplete="off">
-                </div>
-            </div>
-            <div class="fx-swap"><button class="fx-swap-btn fx-swap-trigger" data-pair="usd-cny">⇅</button></div>
-            <div class="fx-row">
-                <span class="fx-flag">🇨🇳</span>
-                <div class="fx-input-wrap">
-                    <div class="fx-label">人民币 CNY</div>
-                    <input type="text" class="fx-input fx-dst" data-pair="usd-cny" placeholder="0.00" inputmode="decimal" autocomplete="off">
-                </div>
-            </div>
-        </div>
+        <div class="fx-card">
+            <div class="fx-title">实时汇率换算</div>
 
-        <!-- USD / EUR -->
-        <div class="fx-card" id="fx-usd-eur">
-            <div class="fx-header">
-                <span class="fx-pair">USD / EUR</span>
-                <span class="fx-badge" id="rate-usd-eur">--</span>
+            <div class="fx-row">
+                <span class="fx-code">CNY</span>
+                <span class="fx-divider"></span>
+                <input type="text" class="fx-input" id="fx-cny" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="CNY">
             </div>
             <div class="fx-row">
-                <span class="fx-flag">🇺🇸</span>
-                <div class="fx-input-wrap">
-                    <div class="fx-label">美元 USD</div>
-                    <input type="text" class="fx-input fx-src" data-pair="usd-eur" data-from="USD" data-to="EUR" placeholder="0.00" inputmode="decimal" autocomplete="off">
-                </div>
+                <span class="fx-code">USD</span>
+                <span class="fx-divider"></span>
+                <input type="text" class="fx-input" id="fx-usd" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="USD">
             </div>
-            <div class="fx-swap"><button class="fx-swap-btn fx-swap-trigger" data-pair="usd-eur">⇅</button></div>
             <div class="fx-row">
-                <span class="fx-flag">🇪🇺</span>
-                <div class="fx-input-wrap">
-                    <div class="fx-label">欧元 EUR</div>
-                    <input type="text" class="fx-input fx-dst" data-pair="usd-eur" placeholder="0.00" inputmode="decimal" autocomplete="off">
-                </div>
+                <span class="fx-code">EUR</span>
+                <span class="fx-divider"></span>
+                <input type="text" class="fx-input" id="fx-eur" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="EUR">
             </div>
-        </div>
+            <div class="fx-row">
+                <span class="fx-code">GBP</span>
+                <span class="fx-divider"></span>
+                <input type="text" class="fx-input" id="fx-gbp" placeholder="0.00" inputmode="decimal" autocomplete="off" data-currency="GBP">
+            </div>
 
-        <!-- USD / GBP -->
-        <div class="fx-card" id="fx-usd-gbp">
-            <div class="fx-header">
-                <span class="fx-pair">USD / GBP</span>
-                <span class="fx-badge" id="rate-usd-gbp">--</span>
+            <div class="fx-rates" id="fx-rates"></div>
+            <div class="fx-footer">
+                <span id="fx-update">加载中...</span>
+                <span>open.er-api.com</span>
             </div>
-            <div class="fx-row">
-                <span class="fx-flag">🇺🇸</span>
-                <div class="fx-input-wrap">
-                    <div class="fx-label">美元 USD</div>
-                    <input type="text" class="fx-input fx-src" data-pair="usd-gbp" data-from="USD" data-to="GBP" placeholder="0.00" inputmode="decimal" autocomplete="off">
-                </div>
-            </div>
-            <div class="fx-swap"><button class="fx-swap-btn fx-swap-trigger" data-pair="usd-gbp">⇅</button></div>
-            <div class="fx-row">
-                <span class="fx-flag">🇬🇧</span>
-                <div class="fx-input-wrap">
-                    <div class="fx-label">英镑 GBP</div>
-                    <input type="text" class="fx-input fx-dst" data-pair="usd-gbp" placeholder="0.00" inputmode="decimal" autocomplete="off">
-                </div>
-            </div>
-        </div>
-
-        <div style="text-align:center;font-size:10px;color:#c7c7cc;padding:4px 0;">
-            <span id="fx-update">汇率加载中...</span> · open.er-api.com
         </div>
     </div>
 </div>
@@ -296,11 +248,14 @@
     });
 
     // ── Currency Converter ──
-    var rates = {}, pairs = {
-        'usd-cny': { from: 'USD', to: 'CNY', dir: 1 },  // 1 = from→to, -1 = to→from
-        'usd-eur': { from: 'USD', to: 'EUR', dir: 1 },
-        'usd-gbp': { from: 'USD', to: 'GBP', dir: 1 }
+    var rates = {};  // rates relative to USD (1 USD = X currency)
+    var inputs = {
+        CNY: document.getElementById('fx-cny'),
+        USD: document.getElementById('fx-usd'),
+        EUR: document.getElementById('fx-eur'),
+        GBP: document.getElementById('fx-gbp')
     };
+    var activeSource = null;
 
     function fetchRates() {
         document.getElementById('fx-update').textContent = '正在获取...';
@@ -309,14 +264,24 @@
             .then(function(data) {
                 if (data.result === 'success') {
                     rates = data.rates;
-                    ['usd-cny','usd-eur','usd-gbp'].forEach(function(pair) {
-                        var p = pairs[pair];
-                        var badge = document.getElementById('rate-' + pair);
-                        if (p.dir === 1) badge.textContent = '1 ' + p.from + ' = ' + rates[p.to].toFixed(4) + ' ' + p.to;
-                        else badge.textContent = '1 ' + p.to + ' = ' + (1/rates[p.to]).toFixed(4) + ' ' + p.from;
+                    var tags = document.getElementById('fx-rates');
+                    tags.innerHTML = '';
+                    // Show cross rates based on CNY
+                    var pairs = [
+                        { from: 'CNY', to: 'USD', rate: 1 / rates.CNY },
+                        { from: 'CNY', to: 'EUR', rate: rates.EUR / rates.CNY },
+                        { from: 'CNY', to: 'GBP', rate: rates.GBP / rates.CNY }
+                    ];
+                    pairs.forEach(function(p) {
+                        var tag = document.createElement('span');
+                        tag.className = 'fx-rate-tag';
+                        tag.textContent = '1 ' + p.from + ' = ' + p.rate.toFixed(4) + ' ' + p.to;
+                        tags.appendChild(tag);
                     });
                     var now = new Date();
                     document.getElementById('fx-update').textContent = now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+                    // Re-convert if there's an active source
+                    if (activeSource) convertFrom(activeSource);
                 } else {
                     document.getElementById('fx-update').textContent = '获取失败';
                 }
@@ -324,61 +289,38 @@
             .catch(function() { document.getElementById('fx-update').textContent = '网络错误'; });
     }
 
-    function convert(pair) {
-        var p = pairs[pair];
-        var src = document.querySelector('.fx-src[data-pair="'+pair+'"]');
-        var dst = document.querySelector('.fx-dst[data-pair="'+pair+'"]');
-        var val = parseFloat(src.value.replace(/,/g, ''));
-        if (isNaN(val) || !rates[p.to]) { dst.value = ''; return; }
-        var result;
-        if (p.dir === 1) result = val * rates[p.to];
-        else result = val / rates[p.to];
-        dst.value = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    function convertFrom(sourceCurrency) {
+        var val = parseFloat(inputs[sourceCurrency].value.replace(/,/g, ''));
+        if (isNaN(val)) {
+            Object.keys(inputs).forEach(function(c) { if (c !== sourceCurrency) inputs[c].value = ''; });
+            return;
+        }
+        // Convert source → USD first, then USD → others
+        var usdVal = val / rates[sourceCurrency];
+        Object.keys(inputs).forEach(function(c) {
+            if (c === sourceCurrency) return;
+            var result = usdVal * rates[c];
+            inputs[c].value = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        });
     }
 
-    // Source input → convert
-    document.querySelectorAll('.fx-src').forEach(function(el) {
-        el.addEventListener('input', function() { convert(el.dataset.pair); });
-        el.addEventListener('keydown', function(e) { if (e.key === 'Enter') { convert(el.dataset.pair); e.preventDefault(); } });
-    });
-
-    // Swap direction
-    document.querySelectorAll('.fx-swap-trigger').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var pair = btn.dataset.pair;
-            var p = pairs[pair];
-            p.dir *= -1;
-
-            // Swap the from/to labels
-            var card = btn.closest('.fx-card');
-            var labels = card.querySelectorAll('.fx-label');
-            var flags = card.querySelectorAll('.fx-flag');
-            var srcInput = card.querySelector('.fx-src');
-            var dstInput = card.querySelector('.fx-dst');
-
-            if (p.dir === 1) {
-                labels[0].textContent = {USD:'美元 USD',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.from] + ' ' + p.from;
-                labels[1].textContent = {CNY:'人民币 CNY',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.to] + ' ' + p.to;
-                flags[0].textContent = {USD:'🇺🇸',EUR:'🇪🇺',GBP:'🇬🇧'}[p.from];
-                flags[1].textContent = {CNY:'🇨🇳',EUR:'🇪🇺',GBP:'🇬🇧'}[p.to];
-                srcInput.dataset.from = p.from; srcInput.dataset.to = p.to;
-            } else {
-                labels[0].textContent = {CNY:'人民币 CNY',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.to] + ' ' + p.to;
-                labels[1].textContent = {USD:'美元 USD',EUR:'欧元 EUR',GBP:'英镑 GBP'}[p.from] + ' ' + p.from;
-                flags[0].textContent = {CNY:'🇨🇳',EUR:'🇪🇺',GBP:'🇬🇧'}[p.to];
-                flags[1].textContent = {USD:'🇺🇸',EUR:'🇪🇺',GBP:'🇬🇧'}[p.from];
-                srcInput.dataset.from = p.to; srcInput.dataset.to = p.from;
-            }
-
-            // Update badge
-            var badge = document.getElementById('rate-' + pair);
-            if (rates[p.to]) {
-                if (p.dir === 1) badge.textContent = '1 ' + p.from + ' = ' + rates[p.to].toFixed(4) + ' ' + p.to;
-                else badge.textContent = '1 ' + p.to + ' = ' + (1/rates[p.to]).toFixed(4) + ' ' + p.from;
-            }
-
-            // Clear and re-convert
-            srcInput.value = ''; dstInput.value = '';
+    // Bind input events
+    Object.keys(inputs).forEach(function(currency) {
+        var el = inputs[currency];
+        el.addEventListener('input', function() {
+            activeSource = currency;
+            // Highlight active source
+            Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); });
+            el.classList.add('active-source');
+            convertFrom(currency);
+        });
+        el.addEventListener('focus', function() {
+            activeSource = currency;
+            Object.keys(inputs).forEach(function(c) { inputs[c].classList.remove('active-source'); });
+            el.classList.add('active-source');
+        });
+        el.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { convertFrom(currency); e.preventDefault(); }
         });
     });
 
